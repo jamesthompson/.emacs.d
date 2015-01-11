@@ -90,7 +90,6 @@
      prodigy
      cider
      scala-mode2
-     ensime
      haskell-mode
      )))
 
