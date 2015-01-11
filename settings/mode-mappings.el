@@ -63,8 +63,6 @@
 ;; Scala
 (autoload 'scala-mode "scala-mode2")
 (add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-(autoload 'ensime-scala-mode-hook "ensime")
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 
 ;; Clojure
 (autoload 'clojure-mode "clojure-mode")
@@ -87,11 +85,6 @@
 ;; Snippets
 (add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
 (add-to-list 'auto-mode-alist '("\\.yasnippet$" . snippet-mode))
-
-;; Buster.JS
-;(autoload 'buster-mode "buster-mode")
-;(setq buster-node-executable "/usr/local/bin/node")
-;(add-file-find-hook-with-pattern "test\\.js$" (lambda () (buster-mode)) "require(\\(\"\\|'\\)buster")
 
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode")
