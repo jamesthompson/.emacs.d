@@ -20,3 +20,4 @@ site-lisp/adventur-mode
 /history
 /SessionDesktop.el
 /.mc-lists.el
+/vendor
