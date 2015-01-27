@@ -188,9 +188,7 @@
 (require 'smart-forward)
 (require 'change-inner)
 (require 'multifiles)
-
-;;powerline
-(require 'setup-powerline)
+(require 'setup-neotree)
 
 ;; Don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)
