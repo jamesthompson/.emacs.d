@@ -115,3 +115,6 @@
 [submodule "site-lisp/neotree"]
 	path = site-lisp/neotree
 	url = https://github.com/jaypei/emacs-neotree.git
+[submodule "site-lisp/idris-mode"]
+	path = site-lisp/idris-mode
+	url = https://github.com/idris-hackers/idris-mode.git
