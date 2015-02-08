@@ -234,4 +234,5 @@
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
 
+(require 'idris-mode)
 (require 'setup-vars)
