@@ -214,7 +214,9 @@
 ;; Misc
 (require 'project-archetypes)
 (require 'my-misc)
-(when is-mac (require 'mac))
+
+;; Always engage mac mode
+(require 'mac)
 
 ;; Elisp go-to-definition with M-. and back again with M-,
 (autoload 'elisp-slime-nav-mode "elisp-slime-nav")
