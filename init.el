@@ -237,4 +237,5 @@
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
 
 (require 'idris-mode)
+(require 'nix-mode)
 (require 'setup-vars)
