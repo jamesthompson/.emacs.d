@@ -45,11 +45,7 @@
 ;; A bit of misc cargo culting in misc.el
 (setq xterm-mouse-mode t)
 
-(defun clear-shell ()
-  (interactive)
-  (let ((comint-buffer-maximum-size 0))
-    (comint-truncate-buffer)))
-
+;; Set clear buffer for particular modes
 (add-hook 'shell-mode-hook
           '(lambda()
              (local-set-key (kbd "M-k") 'clear-shell)))

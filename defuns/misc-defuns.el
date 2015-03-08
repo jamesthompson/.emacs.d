@@ -182,4 +182,5 @@ Both PATTERN and CONTENTS are matched as regular expressions."
   (kmacro-push-ring)
   (edit-kbd-macro 'view-lossage))
 
+
 (defmacro comment (&rest ignore))

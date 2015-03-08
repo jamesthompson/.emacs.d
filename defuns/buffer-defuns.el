@@ -148,6 +148,12 @@ Including indent-buffer, which should not be called automatically on save."
   (delete-trailing-whitespace)
   (indent-buffer))
 
+;; Clear a shell or build result buffer
+(defun clear-shell ()
+  (interactive)
+  (let ((comint-buffer-maximum-size 0))
+    (comint-truncate-buffer)))
+
 (defun file-name-with-one-directory (file-name)
   (concat (cadr (reverse (split-string file-name "/"))) "/"
           (file-name-nondirectory file-name)))
