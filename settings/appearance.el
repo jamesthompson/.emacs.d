@@ -16,21 +16,15 @@
 
 ;; Default theme
 (defun use-presentation-theme ()
-  (interactive)
-  (when (boundp 'magnars/presentation-font)
-    (set-face-attribute 'default nil :font magnars/presentation-font)))
+  (interactive))
 
 (defun use-default-theme ()
   (interactive)
-  (load-theme 'tomorrow-night-paradise)
-  (when (boundp 'magnars/default-font)
-    (set-face-attribute 'default nil :font magnars/default-font)))
+  (load-theme 'tomorrow-night-paradise))
 
 (defun toggle-presentation-mode ()
   (interactive)
-  (if (string= (frame-parameter nil 'font) magnars/default-font)
-      (use-presentation-theme)
-    (use-default-theme)))
+    (use-default-theme))
 
 (global-set-key (kbd "C-<f9>") 'toggle-presentation-mode)
 
