@@ -1,5 +1,9 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (linum-mode 1)))
+
 (custom-set-variables
   '(haskell-process-suggest-remove-import-lines t)
   '(haskell-process-auto-import-loaded-modules t)

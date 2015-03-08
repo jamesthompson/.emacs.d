@@ -26,7 +26,7 @@
 
 ;; Settings for currently logged in user
 (setq user-settings-dir
-      (concat user-emacs-directory "users/" user-login-name))
+      (concat user-emacs-directory "Users/" user-login-name))
 (add-to-list 'load-path user-settings-dir)
 
 ;; Add external projects to load path
