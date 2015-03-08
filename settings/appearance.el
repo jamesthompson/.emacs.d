@@ -22,7 +22,7 @@
 
 (defun use-default-theme ()
   (interactive)
-  (load-theme 'default-black)
+  (load-theme 'tomorrow-night-paradise)
   (when (boundp 'magnars/default-font)
     (set-face-attribute 'default nil :font magnars/default-font)))
 
@@ -78,8 +78,5 @@
    `(eval-after-load ,package-name                     
       '(defadvice ,mode (after rename-modeline activate)
          (setq mode-name ,new-name))))
-
-(rename-modeline "js2-mode" js2-mode "JS2")
-(rename-modeline "clojure-mode" clojure-mode "Clj")
 
 (provide 'appearance)
