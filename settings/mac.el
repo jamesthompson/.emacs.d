@@ -57,12 +57,6 @@
                 (error "Non-character input-event")))
           (when timer (cancel-timer timer)))))))
 
-;; mac friendly font
-(when window-system
-  (setq magnars/default-font "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-  (setq magnars/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
-  (set-face-attribute 'default nil :font magnars/default-font))
-
 ;; keybinding to toggle full screen mode
 (global-set-key (quote [M-f10]) (quote ns-toggle-fullscreen))
 

@@ -49,6 +49,9 @@
 
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
+(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1")
+(setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
+(set-face-attribute 'default nil :font james/default-font)
 
 ;; Setup packages
 (require 'setup-package)
