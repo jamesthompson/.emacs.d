@@ -19,7 +19,7 @@
 (deftheme tomorrow-night-paradise
   "A Pastel Coloured Theme")
 
-(let ((background "#000000")
+(let ((background "#080808")
       (selection "#3a3a3a")
       (foreground "#eaeaea")
       (comment "#969896")
@@ -34,9 +34,9 @@
       (yellow "#e7c547")
       (yellow-2 "#cdcd00")
       (orange "#e78700")
-      (green "#afd75f")
+      (green "#a1b56c")
       (aqua "#70c0b1")
-      (blue "#7aa6da")
+      (blue "#7aa6db")
       (purple "#b294bb"))
 
    (custom-theme-set-faces
@@ -52,7 +52,7 @@
    ;; Font-lock stuff
    `(font-lock-builtin-face ((t (:foreground ,blue))))
    `(font-lock-comment-face ((t (:foreground ,comment))))
-   `(font-lock-constant-face ((t (:foreground ,aqua))))
+   `(font-lock-constant-face ((t (:foreground ,green))))
    `(font-lock-doc-face ((t (:foreground ,comment))))
    `(font-lock-doc-string-face ((t (:foreground ,comment))))
    `(font-lock-function-name-face ((t (:foreground ,blue))))
@@ -61,7 +61,7 @@
    `(font-lock-preprocessor-face ((t (:foreground ,red))))
    `(font-lock-string-face ((t (:foreground ,red))))
    `(font-lock-type-face ((t (:foreground ,blue))))
-   `(font-lock-variable-name-face ((t (:foreground ,aqua))))
+   `(font-lock-variable-name-face ((t (:foreground ,green))))
    `(font-lock-warning-face ((t (:foreground ,red))))
 
    ;; UI related
