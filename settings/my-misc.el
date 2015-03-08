@@ -54,4 +54,8 @@
           '(lambda()
              (local-set-key (kbd "M-k") 'clear-shell)))
 
+(add-hook 'sbt-mode-hook
+          '(lambda()
+             (local-set-key (kbd "M-k") 'clear-shell)))
+
 (provide 'my-misc)
