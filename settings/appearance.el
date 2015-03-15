@@ -20,7 +20,7 @@
 
 (defun use-default-theme ()
   (interactive)
-  (load-theme 'tomorrow-night-paradise)
+  (load-theme 'boron)
   (when (boundp 'james/default-font)
     (set-face-attribute 'default nil :font james/default-font)))
 
