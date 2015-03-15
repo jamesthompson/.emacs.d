@@ -23,7 +23,7 @@
  'boron
  ;; basic theming.
 
- '(default ((t (:foreground "#e8e8d3" :background "#151515" ))))
+ '(default ((t (:foreground "#e8e8d3" :background "#191919" ))))
  '(region  ((t (:background "#404040"))))
  '(cursor  ((t (:background "#b0d0f0"))))
 
