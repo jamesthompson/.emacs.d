@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: println(s"${..}")
+# key: pls
+# --
+println(s"${1:string}\$\{${2:obj}\}") $0  

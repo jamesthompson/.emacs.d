@@ -8,6 +8,18 @@
           (lambda ()
             (linum-mode 1)))
 
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+(add-hook 'haskell-mode-hook 'flycheck-mode t)
+
+(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+  (setenv "PATH" (concat my-cabal-path ":" (getenv "PATH")))
+  (add-to-list 'exec-path my-cabal-path))
+
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
 (custom-set-variables
   '(haskell-process-suggest-remove-import-lines t)
   '(haskell-process-auto-import-loaded-modules t)

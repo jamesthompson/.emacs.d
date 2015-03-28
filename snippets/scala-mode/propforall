@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: forall property check
+# key: propforall
+# --
+property("${1:function under test}") = forAll(${2:generator}) {
+  (${3:variable}: ${4: generator result type}) =>
+  ("${5:predicate definition}" |: {
+    $0
+  })
+}

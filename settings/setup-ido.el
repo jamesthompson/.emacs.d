@@ -8,7 +8,7 @@
       ido-auto-merge-work-directories-length -1
       ido-create-new-buffer 'always
       ido-use-filename-at-point nil
-      ido-max-prospects 10)
+      ido-max-prospects 25)
 
 ;; Try out flx-ido for better flex matching between words
 (require 'flx-ido)
@@ -54,7 +54,6 @@
 (set-default 'imenu-auto-rescan t)
 
 (add-to-list 'ido-ignore-directories "target")
-(add-to-list 'ido-ignore-directories "node_modules")
 
 ;; Ido at point (C-,)
 (require 'ido-at-point)

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: secure property check
+# key: propsec
+# --
+property("${1:function under test}") = secure {
+  ("${2:predicate definition}" |: {
+    $0
+  })
+}
