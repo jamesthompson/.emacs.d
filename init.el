@@ -3,8 +3,9 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; No splash screen please ... jeez
+;; Splash and scratch msgs
 (setq inhibit-startup-message t)
+(setq initial-scratch-message ";; Scratch")
 
 ;; Set path to dependencies
 (setq site-lisp-dir
@@ -49,7 +50,7 @@
 
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
-(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-10-*-*-*-m-0-iso10646-1")
+(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 (setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :font james/default-font)
 

@@ -10,6 +10,8 @@
 
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 (add-hook 'haskell-mode-hook 'flycheck-mode t)
 
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
