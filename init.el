@@ -96,6 +96,7 @@
      cider
      scala-mode2
      haskell-mode
+     pivotal-tracker
      )))
 
 (condition-case nil
@@ -195,6 +196,7 @@
 (require 'change-inner)
 (require 'multifiles)
 (require 'setup-neotree)
+(require 'setup-pivotal)
 
 ;; Setup git gutter fringe
 (require 'setup-git-gutter-fringe)

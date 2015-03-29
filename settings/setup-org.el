@@ -11,7 +11,7 @@
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
 
-(setq org-directory "~/Dropbox/org")
+(setq org-directory "~/workspace/org")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (define-key global-map (kbd "M-<f6>") 'org-capture)
 

@@ -21,3 +21,4 @@ site-lisp/adventur-mode
 /SessionDesktop.el
 /.mc-lists.el
 /vendor
+/settings/setup-pivotal.el
