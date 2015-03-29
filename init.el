@@ -87,6 +87,7 @@
      elisp-slime-nav
      git-commit-mode
      gitconfig-mode
+     git-gutter-fringe
      dockerfile-mode
      gitignore-mode
      clojure-mode
@@ -148,7 +149,8 @@
           java-mode
           ruby-mode
           markdown-mode
-          groovy-mode)
+          groovy-mode
+          scala-mode2)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
@@ -193,6 +195,9 @@
 (require 'change-inner)
 (require 'multifiles)
 (require 'setup-neotree)
+
+;; Setup git gutter fringe
+(require 'setup-git-gutter-fringe)
 
 ;; Don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)
