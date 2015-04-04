@@ -50,7 +50,7 @@
 
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
-(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-10-*-*-*-m-0-iso10646-1")
 (setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
 (set-face-attribute 'default nil :font james/default-font)
 
@@ -96,7 +96,6 @@
      cider
      scala-mode2
      haskell-mode
-     pivotal-tracker
      )))
 
 (condition-case nil
@@ -196,7 +195,8 @@
 (require 'change-inner)
 (require 'multifiles)
 (require 'setup-neotree)
-(require 'setup-pivotal)
+(require 'idris-mode)
+(require 'nix-mode)
 
 ;; Setup git gutter fringe
 (require 'setup-git-gutter-fringe)
@@ -246,7 +246,3 @@
 ;; Conclude init by setting up specifics for the current user
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-
-(require 'idris-mode)
-(require 'nix-mode)
-(require 'setup-vars)
