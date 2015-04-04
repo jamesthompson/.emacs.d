@@ -137,6 +137,9 @@
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)
 
+(setq magit-auto-revert-mode nil)
+(setq magit-last-seen-setup-instructions "1.4.0")
+
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
 
