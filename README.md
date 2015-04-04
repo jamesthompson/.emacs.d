@@ -4,8 +4,6 @@ Settings forked from magnars/.emacs.d
 
 ## Setup
 
-Ensure to toast your .emacs file if you have one. Also delete anything inside your .emacs.d.
-
 To grab all the dependencies:
 
     git clone --recursive git://github.com:jamesthompson/.emacs.d.git
