@@ -8,6 +8,10 @@
 
 (require 'clj-refactor)
 
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (linum-mode 1)))
+
 (cljr-add-keybindings-with-modifier "C-s-")
 (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
 
@@ -59,6 +63,11 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
 ;; Cycle between () {} []
+
+;; Setup dash-at-point docset
+
+(add-hook 'clojure-mode-hook
+          (lambda () (setq dash-at-point-docset "clojure")))
 
 (defun live-delete-and-extract-sexp ()
   "Delete the sexp and return it."

@@ -8,4 +8,7 @@
           (lambda ()
             (linum-mode 1)))
 
+(add-hook 'scala-mode-hook
+          (lambda () (setq dash-at-point-docset "scala")))
+
 (provide 'setup-scala)

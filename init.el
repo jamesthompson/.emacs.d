@@ -96,6 +96,7 @@
      cider
      scala-mode2
      haskell-mode
+     dash-at-point
      )))
 
 (condition-case nil
@@ -133,6 +134,7 @@
 (require 'setup-html-mode)
 (require 'setup-paredit)
 (require 'setup-haskell)
+(require 'setup-dash)
 
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)

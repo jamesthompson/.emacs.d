@@ -14,6 +14,9 @@
 
 (add-hook 'haskell-mode-hook 'flycheck-mode t)
 
+(add-hook 'haskell-mode-hook
+          (lambda () (setq dash-at-point-docset "haskell")))
+
 (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
   (setenv "PATH" (concat my-cabal-path ":" (getenv "PATH")))
   (add-to-list 'exec-path my-cabal-path))
