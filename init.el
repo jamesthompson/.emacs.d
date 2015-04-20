@@ -97,6 +97,7 @@
      scala-mode2
      haskell-mode
      dash-at-point
+     protobuf-mode
      )))
 
 (condition-case nil
@@ -202,6 +203,7 @@
 (require 'setup-neotree)
 (require 'idris-mode)
 (require 'nix-mode)
+(require 'protobuf-mode)
 
 ;; Setup git gutter fringe
 (require 'setup-git-gutter-fringe)
