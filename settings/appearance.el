@@ -20,7 +20,7 @@
 
 (defun use-default-theme ()
   (interactive)
-  (load-theme 'boron)
+  (load-theme 'smyx)
   (when (boundp 'james/default-font)
     (set-face-attribute 'default nil :font james/default-font)))
 
@@ -49,7 +49,7 @@
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
   (tooltip-mode -1)
-  (blink-cursor-mode -1))
+  (blink-cursor-mode 1))
 
 ;; Make zooming affect frame instead of buffers
 (require 'zoom-frm)
@@ -71,7 +71,7 @@
 (eval-after-load "subword" '(diminish 'subword-mode))
 
 (defmacro rename-modeline (package-name mode new-name)
-   `(eval-after-load ,package-name                     
+   `(eval-after-load ,package-name
       '(defadvice ,mode (after rename-modeline activate)
          (setq mode-name ,new-name))))
 

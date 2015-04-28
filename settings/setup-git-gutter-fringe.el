@@ -5,7 +5,7 @@
       (setq-default indicate-empty-lines +1)))
 
 (set-face-foreground 'git-gutter-fr:modified "yellow")
-(set-face-foreground 'git-gutter-fr:added    "gree")
+(set-face-foreground 'git-gutter-fr:added    "green")
 (set-face-foreground 'git-gutter-fr:deleted  "red")
 
 (provide 'setup-git-gutter-fringe)
