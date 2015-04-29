@@ -98,6 +98,7 @@
      haskell-mode
      dash-at-point
      protobuf-mode
+     terraform-mode
      )))
 
 (condition-case nil
