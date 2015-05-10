@@ -210,11 +210,6 @@
 (global-set-key (kbd "H-*") 'beginning-of-buffer) ;; H-p
 (global-set-key (kbd "H-n") 'end-of-buffer)
 
-;; Convenience on ThinkPad Keyboard: Use back/forward as pg up/down
-(global-set-key (kbd "<XF86Back>") 'scroll-down)
-(global-set-key (kbd "<XF86Forward>") 'scroll-up)
-(global-set-key (kbd "<XF86WakeUp>") 'beginning-of-buffer)
-
 ;; Query replace regex key binding
 (global-set-key (kbd "M-&") 'query-replace-regexp)
 
