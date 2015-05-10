@@ -169,7 +169,7 @@
    `(isearch-fail ((,class (:foreground ,smyx-black :background ,smyx-pink))))
 
    `(lazy-highlight ((,class (:foreground ,smyx-black :background ,smyx-yellow))))
-   `(query-replace ((,class (:background ,smyx-gray-5))))
+   `(query-replace ((,class (:foreground ,smyx-black :background ,smyx-white))))
    `(Highline-face ((,class (:background ,smyx-green))))
    `(italic ((,class (nil))))
    `(left-margin ((,class (nil))))
