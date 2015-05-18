@@ -60,7 +60,8 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(magit
+   '(haskell-mode
+     magit
      paredit
      move-text
      gist
@@ -95,7 +96,6 @@
      prodigy
      cider
      scala-mode2
-     haskell-mode
      dash-at-point
      protobuf-mode
      terraform-mode
@@ -123,6 +123,7 @@
 (setq guide-key/popup-window-position 'bottom)
 
 ;; Setup extensions
+(require 'setup-haskell)
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'dired '(require 'setup-dired))
@@ -135,7 +136,6 @@
 (require 'setup-ffip)
 (require 'setup-html-mode)
 (require 'setup-paredit)
-(require 'setup-haskell)
 (require 'setup-dash)
 
 (require 'prodigy)
@@ -207,7 +207,7 @@
 (require 'protobuf-mode)
 
 ;; Setup git gutter fringe
-(require 'setup-git-gutter-fringe)
+;;(require 'setup-git-gutter-fringe)
 
 ;; Don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)
