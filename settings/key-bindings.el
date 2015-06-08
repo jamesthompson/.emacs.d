@@ -22,6 +22,7 @@
 
 ;; Expand region (increases selected region by semantic units)
 (global-set-key (kbd "C-'") 'er/expand-region)
+(global-set-key (kbd "C-[ [ a b") 'er/expand-region)
 
 ;; Multiple-cursors
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
