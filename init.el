@@ -99,6 +99,7 @@
      dash-at-point
      protobuf-mode
      terraform-mode
+     rainbow-delimiters
      )))
 
 (condition-case nil
