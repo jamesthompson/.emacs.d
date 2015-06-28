@@ -35,10 +35,13 @@
 (eval-after-load 'haskell-cabal
     '(define-key haskell-cabal-mode-map (kbd "C-c C-o") 'haskell-compile))
 
+(setq haskell-stylish-on-save t)
+
 ;; (require 'ghc)
 ;; (setq ghc-debug t)
 ;; (autoload 'ghc-init "ghc" nil t)
 ;; (autoload 'ghc-debug "ghc" nil t)
 ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
+(require 'hs-lint)
 (provide 'setup-haskell)

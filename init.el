@@ -138,6 +138,7 @@
 (require 'setup-html-mode)
 (require 'setup-paredit)
 (require 'setup-dash)
+(require 'setup-powerline)
 
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)
