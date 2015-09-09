@@ -207,6 +207,7 @@
 (require 'idris-mode)
 (require 'nix-mode)
 (require 'protobuf-mode)
+(require 'cypher-mode)
 
 ;; Setup git gutter fringe
 ;;(require 'setup-git-gutter-fringe)

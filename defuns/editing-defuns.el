@@ -65,22 +65,22 @@ If no START and END is provided, the current region-beginning and
 region-end is used."
   (interactive "p")
   (save-excursion
-   (let* ((start (or start (region-beginning)))
-          (end (or end (region-end)))
-          (region (buffer-substring start end)))
-     (goto-char end)
-     (dotimes (i num)
-       (insert region)))))
+    (let* ((start (or start (region-beginning)))
+           (end (or end (region-end)))
+           (region (buffer-substring start end)))
+      (goto-char end)
+      (dotimes (i num)
+        (insert region)))))
 
 (defun duplicate-current-line (&optional num)
   "Duplicate the current line NUM times."
   (interactive "p")
   (save-excursion
-   (when (eq (point-at-eol) (point-max))
-     (goto-char (point-max))
-     (newline)
-     (forward-char -1))
-   (duplicate-region num (point-at-bol) (1+ (point-at-eol)))))
+    (when (eq (point-at-eol) (point-max))
+      (goto-char (point-max))
+      (newline)
+      (forward-char -1))
+    (duplicate-region num (point-at-bol) (1+ (point-at-eol)))))
 
 ;; automatically indenting yanked text if in programming-modes
 
@@ -333,3 +333,17 @@ region-end is used."
   (while (not (looking-at "}"))
     (join-line -1))
   (back-to-indentation))
+
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0123456789")
+  (or (looking-at "[0123456789]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
+(defun decrement-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0123456789")
+  (or (looking-at "[0123456789]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (- (string-to-number (match-string 0)) 1))))

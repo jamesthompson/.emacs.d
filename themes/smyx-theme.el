@@ -181,10 +181,10 @@
    `(mode-line
      ((,class (:foreground ,smyx-blue ;;; dominant
                            :background ,smyx-black-2))))
-   ;; `(mode-line-buffer-id ((,class (:foreground ,smyx-yellow :weight bold))))
+   `(mode-line-buffer-id ((,class (:foreground ,smyx-black :weight bold))))
 
    `(mode-line-inactive
-     ((,class (:foreground ,smyx-gray-7
+     ((,class (:foreground ,smyx-white
                            :background ,smyx-gray-6))))
 
    `(region ((,class (:background ,smyx-black-3))))
