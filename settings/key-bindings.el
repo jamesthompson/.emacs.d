@@ -334,4 +334,7 @@
 (global-set-key (kbd "C-c +") 'increment-number-at-point)
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
 
+;; Indent region
+(global-set-key (kbd "C-i") 'indent-region)
+
 (provide 'key-bindings)
