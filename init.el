@@ -98,8 +98,9 @@
      scala-mode2
      dash-at-point
      protobuf-mode
-     terraform-mode
      rainbow-delimiters
+     hcl-mode
+     terraform-mode
      )))
 
 (condition-case nil

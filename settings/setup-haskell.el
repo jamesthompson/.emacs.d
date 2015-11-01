@@ -37,11 +37,5 @@
 
 (setq haskell-stylish-on-save t)
 
-;; (require 'ghc)
-;; (setq ghc-debug t)
-;; (autoload 'ghc-init "ghc" nil t)
-;; (autoload 'ghc-debug "ghc" nil t)
-;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-
 (require 'hs-lint)
 (provide 'setup-haskell)
