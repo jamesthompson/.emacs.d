@@ -27,6 +27,8 @@
 (require 'js2-imenu-extras)
 (js2-imenu-extras-setup)
 
+(setq tab-width 2)
+
 ;; Set up wrapping of pairs, with the possiblity of semicolons thrown into the mix
 
 (defun js2r--setup-wrapping-pair (open close)

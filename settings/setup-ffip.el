@@ -61,6 +61,7 @@
                  "/.cask"
                  "/generated"
                  "/.repl"
-                 "/.tmp")))
+                 "/.tmp"
+                 "/.stack-work")))
 
 (provide 'setup-ffip)

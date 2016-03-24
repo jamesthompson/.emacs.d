@@ -1,5 +1,8 @@
 (require 'clojure-mode)
 
+(require 'rainbow-delimiters)
+(require 'paredit)
+
 (defadvice clojure-test-run-tests (before save-first activate)
   (save-buffer))
 
@@ -10,7 +13,7 @@
 
 (add-hook 'clojure-mode-hook
           (lambda ()
-            (linum-mode 1)))
+            (linum-mode 1) (rainbow-delimiters-mode)))
 
 (cljr-add-keybindings-with-modifier "C-s-")
 (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
@@ -148,6 +151,5 @@
 
 ;; TODO: Loot more stuff from:
 ;;  - https://github.com/overtone/emacs-live/blob/master/packs/dev/clojure-pack/config/paredit-conf.el
-
 
 (provide 'setup-clojure-mode)

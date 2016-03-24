@@ -79,6 +79,7 @@
      smartparens
      ido-vertical-mode
      ido-at-point
+     idris-mode
      simple-httpd
      guide-key
      nodejs-repl
@@ -101,6 +102,8 @@
      rainbow-delimiters
      hcl-mode
      terraform-mode
+     purescript-mode
+     string-inflection
      )))
 
 (condition-case nil
@@ -205,7 +208,6 @@
 (require 'change-inner)
 (require 'multifiles)
 (require 'setup-neotree)
-(require 'idris-mode)
 (require 'nix-mode)
 (require 'protobuf-mode)
 (require 'cypher-mode)
@@ -258,3 +260,6 @@
 ;; Conclude init by setting up specifics for the current user
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
+
+(setq js-indent-level 2
+        js2-basic-offset 2)
