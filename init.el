@@ -105,6 +105,8 @@
      purescript-mode
      string-inflection
      intero
+     psc-ide
+     jsx-mode
      )))
 
 (condition-case nil
@@ -144,6 +146,8 @@
 (require 'setup-paredit)
 (require 'setup-dash)
 (require 'setup-powerline)
+(require 'setup-purescript)
+(require 'setup-jsx-mode)
 
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)

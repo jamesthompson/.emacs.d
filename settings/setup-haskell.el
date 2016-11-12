@@ -12,6 +12,9 @@
 
 (add-hook 'haskell-mode-hook 'intero-mode)
 
+(custom-set-variables
+ '(haskell-stylish-on-save t))
+
 (setq haskell-stylish-on-save t)
 
 (require 'hs-lint)

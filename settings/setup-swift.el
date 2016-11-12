@@ -1,5 +1,8 @@
 (require 'swift-mode)
 (require 'flycheck)
+(require 'company-sourcekit)
+
+(add-to-list 'company-backends 'company-sourcekit)
 
 (add-hook 'swift-mode-hook
           '(lambda ()
