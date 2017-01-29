@@ -19,9 +19,6 @@
 [submodule "site-lisp/php-mode"]
 	path = site-lisp/php-mode
 	url = https://github.com/ejmr/php-mode.git
-[submodule "site-lisp/perspective"]
-	path = site-lisp/perspective
-	url = https://github.com/magnars/perspective-el.git
 [submodule "site-lisp/delsel"]
 	path = site-lisp/delsel
 	url = https://github.com/emacsmirror/delsel.git
@@ -34,9 +31,6 @@
 [submodule "site-lisp/eproject"]
 	path = site-lisp/eproject
 	url = https://github.com/jrockway/eproject.git
-[submodule "site-lisp/jump-char"]
-	path = site-lisp/jump-char
-	url = https://github.com/lewang/jump-char.git
 [submodule "site-lisp/multiple-cursors"]
 	path = site-lisp/multiple-cursors
 	url = https://github.com/magnars/multiple-cursors.el.git
@@ -49,27 +43,12 @@
 [submodule "site-lisp/browse-kill-ring"]
 	path = site-lisp/browse-kill-ring
 	url = https://github.com/T-J-Teru/browse-kill-ring.git
-[submodule "site-lisp/find-file-in-project"]
-	path = site-lisp/find-file-in-project
-	url = https://github.com/technomancy/find-file-in-project
-[submodule "site-lisp/wgrep"]
-	path = site-lisp/wgrep
-	url = https://github.com/magnars/Emacs-wgrep
-[submodule "site-lisp/smex"]
-	path = site-lisp/smex
-	url = https://github.com/nonsequitur/smex.git
 [submodule "site-lisp/annoying-arrows-mode"]
 	path = site-lisp/annoying-arrows-mode
 	url = https://github.com/magnars/annoying-arrows-mode.el.git
 [submodule "site-lisp/fill-column-indicator"]
 	path = site-lisp/fill-column-indicator
 	url = https://github.com/alpaker/Fill-Column-Indicator.git
-[submodule "site-lisp/smart-forward"]
-	path = site-lisp/smart-forward
-	url = https://github.com/magnars/smart-forward.el.git
-[submodule "site-lisp/ido-ubiquitous"]
-	path = site-lisp/ido-ubiquitous
-	url = https://github.com/DarwinAwardWinner/ido-ubiquitous.git
 [submodule "site-lisp/buster-mode"]
 	path = site-lisp/buster-mode
 	url = https://github.com/magnars/buster-mode.git
@@ -85,9 +64,6 @@
 [submodule "site-lisp/dash"]
 	path = site-lisp/dash
 	url = https://github.com/magnars/dash.el.git
-[submodule "site-lisp/multifiles"]
-	path = site-lisp/multifiles
-	url = https://github.com/magnars/multifiles.el.git
 [submodule "site-lisp/tagedit"]
 	path = site-lisp/tagedit
 	url = https://github.com/magnars/tagedit.git
@@ -109,12 +85,6 @@
 [submodule "site-lisp/flycheck"]
 	path = site-lisp/flycheck
 	url = https://github.com/lunaryorn/flycheck.git
-[submodule "site-lisp/datomic-snippets"]
-	path = site-lisp/datomic-snippets
-	url = https://github.com/magnars/datomic-snippets.git
-[submodule "site-lisp/neotree"]
-	path = site-lisp/neotree
-	url = https://github.com/jaypei/emacs-neotree.git
 [submodule "site-lisp/idris-mode"]
 	path = site-lisp/idris-mode
 	url = https://github.com/idris-hackers/idris-mode.git

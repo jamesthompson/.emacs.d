@@ -14,6 +14,7 @@ that are best handled by the package manager.
 ## Install emacs on mac
 
     brew install emacs
+    brew services start emacs
 
 I removed the stock emacs version from Mac OS X 10.9 in /usr/bin
 
@@ -104,4 +105,5 @@ I manually installed Emacs cocoa binary into /Applications.
 
 ### Magit (Git wrapper)
 
-* `C-x m`. `s` to stage, `c` to commit. `C-c C-c` to finish commit msg buffer.
+* `C-x m`. `s` to stage, `c` to commit. `C-c C-c` to finish commit msg buffer. `P u` to push quickly.
+

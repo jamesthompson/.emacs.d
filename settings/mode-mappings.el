@@ -39,36 +39,9 @@
 (add-to-list 'auto-mode-alist '("\\.jsp$" . crappy-jsp-mode))
 (add-to-list 'auto-mode-alist '("\\.jspf$" . crappy-jsp-mode))
 
-;; Ruby
-(autoload 'rhtml-mode "rhtml-mode")
-(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.watchr$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Vagrantfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("capfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.erb$" . rhtml-mode))
-
 ;; Puppet
 (autoload 'puppet-mode "puppet-mode")
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
-
-;; Groovy
-(autoload 'groovy-mode "groovy-mode")
-(add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
-(add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode))
-
-;; Scala
-(autoload 'scala-mode "scala-mode2")
-(add-to-list 'auto-mode-alist '("\\.scala$" . scala-mode))
-(add-to-list 'auto-mode-alist '("\\.sbt$" . scala-mode))
-
-;; Clojure
-(autoload 'clojure-mode "clojure-mode")
-(add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
-(add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
 
 ;; SVG
 (add-to-list 'auto-mode-alist '("\\.svg$" . image-mode))
@@ -106,9 +79,5 @@
 ;; Nix mode
 (autoload 'nix-mode "nix-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.nix$" . nix-mode))
-
-;; Cypher mode
-(autoload 'cypher-mode "cypher-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.cql$" . cypher-mode))
 
 (provide 'mode-mappings)

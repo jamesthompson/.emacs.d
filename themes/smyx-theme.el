@@ -468,7 +468,7 @@
    ;; magit
    `(magit-section-title ((,class (:foreground ,smyx-green))))
    `(magit-branch ((,class (:foreground ,smyx-blue))))
-   `(magit-item-highlight ((,class (:background ,smyx-black-3))))
+   `(magit-section-highlight ((,class (:background ,smyx-black-3))))
    `(magit-log-sha1 ((,class (:foreground ,smyx-blue))))
    `(magit-log-author ((,class (:foreground ,smyx-green))))
    `(magit-log-head-label-default ((,class (:background ,smyx-bg :foreground ,smyx-green))))
@@ -476,10 +476,8 @@
    `(magit-log-head-label-remote  ((,class (:background ,smyx-bg :foreground ,smyx-yellow))))
    `(magit-log-head-label-tags    ((,class (:background ,smyx-bg :foreground ,smyx-yellow))))
    `(magit-log-head-label-local    ((,class (:background ,smyx-bg :foreground ,smyx-blue))))
-
-
-   `(magit-diff-add ((,class (:foreground ,smyx-green))))
-   `(magit-diff-del ((,class (:foreground ,smyx-red))))
+   `(magit-diff-added ((,class (:foreground ,smyx-green))))
+   `(magit-diff-removed ((,class (:foreground ,smyx-red))))
    `(magit-diff-hunk-header ((,class (:foreground ,smyx-yellow))))
 
    `(eval-sexp-fu-flash ((,class (:background ,smyx-gray-8 :foreground ,smyx-pink-2))))

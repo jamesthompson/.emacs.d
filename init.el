@@ -1,4 +1,11 @@
 ;; Turn off mouse interface early in startup to avoid momentary display
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -60,7 +67,8 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(haskell-mode
+   '(dash
+     haskell-mode
      magit
      paredit
      move-text
@@ -82,22 +90,12 @@
      idris-mode
      simple-httpd
      guide-key
-     nodejs-repl
      restclient
      highlight-escape-sequences
      whitespace-cleanup-mode
      elisp-slime-nav
-     git-commit-mode
-     gitconfig-mode
-     git-gutter-fringe
      dockerfile-mode
-     gitignore-mode
-     clojure-mode
-     groovy-mode
      prodigy
-     cider
-     scala-mode2
-     dash-at-point
      protobuf-mode
      rainbow-delimiters
      hcl-mode
@@ -106,7 +104,18 @@
      string-inflection
      intero
      psc-ide
-     jsx-mode
+     perspective
+     smex
+     ido-ubiquitous
+     find-file-in-project
+     multiple-cursors
+     jump-char
+     wgrep
+     smart-forward
+     multifiles
+     neotree
+     dash-at-point
+     anaconda-mode
      )))
 
 (condition-case nil
@@ -131,7 +140,6 @@
 (setq guide-key/popup-window-position 'bottom)
 
 ;; Setup extensions
-(require 'setup-haskell)
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'dired '(require 'setup-dired))
@@ -146,14 +154,10 @@
 (require 'setup-paredit)
 (require 'setup-dash)
 (require 'setup-powerline)
-(require 'setup-purescript)
-(require 'setup-jsx-mode)
+
 
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)
-
-(setq magit-auto-revert-mode nil)
-(setq magit-last-seen-setup-instructions "1.4.0")
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
@@ -165,20 +169,16 @@
           restclient-mode-hook
           js-mode-hook
           java-mode
-          ruby-mode
-          markdown-mode
-          groovy-mode
-          scala-mode2)
+          markdown-mode)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
+(eval-after-load 'haskell-mode '(require 'setup-haskell))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
-(eval-after-load 'ruby-mode '(require 'setup-ruby-mode))
-(eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
-(eval-after-load 'scala-mode2 '(require 'setup-scala))
 (eval-after-load 'java-mode '(require 'setup-java))
-(eval-after-load 'swift-mode '(require 'setup-swift))
+(require 'setup-python)
+(require 'setup-purescript)
 
 ;; Load stuff on demand
 (autoload 'skewer-start "setup-skewer" nil t)
@@ -217,10 +217,6 @@
 (require 'setup-neotree)
 (require 'nix-mode)
 (require 'protobuf-mode)
-(require 'cypher-mode)
-
-;; Setup git gutter fringe
-;;(require 'setup-git-gutter-fringe)
 
 ;; Don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)
@@ -268,5 +264,3 @@
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
 
-(setq js-indent-level 2
-        js2-basic-offset 2)

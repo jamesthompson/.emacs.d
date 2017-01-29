@@ -22,3 +22,4 @@ site-lisp/adventur-mode
 /.mc-lists.el
 /vendor
 /settings/setup-pivotal.el
+*.log
