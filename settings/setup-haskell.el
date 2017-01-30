@@ -11,6 +11,7 @@
             (linum-mode 1)))
 
 (add-hook 'haskell-mode-hook 'intero-mode)
+(add-hook 'haskell-mode-hook 'flycheck-pos-tip-mode)
 
 (custom-set-variables
  '(haskell-stylish-on-save t))
