@@ -116,6 +116,7 @@
      neotree
      dash-at-point
      anaconda-mode
+     kotlin-mode
      )))
 
 (condition-case nil
@@ -155,7 +156,6 @@
 (require 'setup-dash)
 (require 'setup-powerline)
 
-
 (require 'prodigy)
 (global-set-key (kbd "C-x M-m") 'prodigy)
 
@@ -174,6 +174,7 @@
 
 ;; Language specific setup files
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
+(eval-after-load 'kotlin-mode '(require 'setup-kotlin))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 (eval-after-load 'java-mode '(require 'setup-java))
