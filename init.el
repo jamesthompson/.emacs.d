@@ -178,6 +178,7 @@
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 (eval-after-load 'java-mode '(require 'setup-java))
+(require 'setup-agda)
 (require 'setup-python)
 (require 'setup-purescript)
 
@@ -264,4 +265,3 @@
 ;; Conclude init by setting up specifics for the current user
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-
