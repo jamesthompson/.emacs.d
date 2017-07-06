@@ -51,7 +51,7 @@
       (smyx-bg+3 "#585858")
 
       (smyx-red+1 "#992222")
-     (smyx-red "#FAB1AB")
+      (smyx-red "#FAB1AB")
       (smyx-red-1 "#FAB1AB")
       (smyx-red-2 "#FAB1AB")
       (smyx-red-3 "#FAB1AB")
