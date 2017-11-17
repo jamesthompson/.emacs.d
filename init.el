@@ -106,7 +106,7 @@
      psc-ide
      perspective
      smex
-     ido-ubiquitous
+     ido-completing-read+
      find-file-in-project
      multiple-cursors
      jump-char
