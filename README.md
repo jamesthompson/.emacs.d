@@ -32,7 +32,7 @@ I manually installed Emacs cocoa binary into /Applications.
 
  * Help is bound to `F1`. `C-h` is rebound to backspace, like in the shell.
 
- * Autocomplete with `C-.` (autocomplete entire lines with `C-:`)
+ * Autocomplete with `C-e`
 
  * Expand-region is bound to `C-'`
 
@@ -105,5 +105,5 @@ I manually installed Emacs cocoa binary into /Applications.
 
 ### Magit (Git wrapper)
 
-* `C-x m`. `s` to stage, `c` to commit. `C-c C-c` to finish commit msg buffer. `P u` to push quickly.
+* `C-x m`. `s` to stage, `c` to commit. `C-c C-c` to finish commit msg buffer. `P u` to push upstream.
 
