@@ -1,5 +1,4 @@
 (require 'haskell-mode)
-(require 'intero)
 
 (require 'rainbow-delimiters)
 (add-hook 'haskell-mode-hook #'rainbow-delimiters-mode)
@@ -10,7 +9,6 @@
           (lambda ()
             (linum-mode 1)))
 
-(add-hook 'haskell-mode-hook 'intero-mode)
 (add-hook 'haskell-mode-hook 'flycheck-pos-tip-mode)
 
 (custom-set-variables

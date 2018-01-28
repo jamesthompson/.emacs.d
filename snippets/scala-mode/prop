@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: property predicate
-# key: prop
-# --
-("${1:predicate}" |: {
-  $0
-})

@@ -23,7 +23,7 @@
  '(ido-use-filename-at-point nil)
  '(package-selected-packages
    (quote
-    (browse-kill-ring+ json-mode flycheck-kotlin flycheck-purescript js2-refactor tagedit js2-mode yaml-mode kotlin-mode browse-kill-ring change-inner anaconda-mode dash neotree multifiles smart-forward wgrep jump-char multiple-cursors find-file-in-project ido-ubiquitous smex perspective exec-path-from-shell psc-ide intero string-inflection purescript-mode terraform-mode hcl-mode rainbow-delimiters protobuf-mode dash-at-point prodigy dockerfile-mode elisp-slime-nav whitespace-cleanup-mode highlight-escape-sequences restclient guide-key simple-httpd idris-mode ido-at-point ido-vertical-mode smartparens yasnippet css-eldoc dired-details flx-ido flx flycheck-pos-tip flycheck fill-column-indicator markdown-mode visual-regexp htmlize gist move-text paredit magit haskell-mode)))
+    (ido-completing-read+ browse-kill-ring+ json-mode flycheck-kotlin flycheck-purescript js2-refactor tagedit js2-mode yaml-mode kotlin-mode browse-kill-ring change-inner anaconda-mode dash neotree multifiles smart-forward wgrep jump-char multiple-cursors find-file-in-project ido-ubiquitous smex perspective exec-path-from-shell psc-ide intero string-inflection purescript-mode terraform-mode hcl-mode rainbow-delimiters protobuf-mode dash-at-point prodigy dockerfile-mode elisp-slime-nav whitespace-cleanup-mode highlight-escape-sequences restclient guide-key simple-httpd idris-mode ido-at-point ido-vertical-mode smartparens yasnippet css-eldoc dired-details flx-ido flx flycheck-pos-tip flycheck fill-column-indicator markdown-mode visual-regexp htmlize gist move-text paredit magit haskell-mode)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil

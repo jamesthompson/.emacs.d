@@ -1,9 +1,5 @@
 ;; Turn off mouse interface early in startup to avoid momentary display
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -73,7 +69,6 @@
      paredit
      move-text
      gist
-     htmlize
      visual-regexp
      markdown-mode
      fill-column-indicator
@@ -81,13 +76,10 @@
      flycheck-pos-tip
      flx
      flx-ido
-     dired-details
      css-eldoc
-     yasnippet
      smartparens
      ido-vertical-mode
      ido-at-point
-     idris-mode
      simple-httpd
      guide-key
      restclient
@@ -95,14 +87,10 @@
      whitespace-cleanup-mode
      elisp-slime-nav
      dockerfile-mode
-     prodigy
      protobuf-mode
      rainbow-delimiters
-     hcl-mode
-     terraform-mode
      purescript-mode
      string-inflection
-     intero
      psc-ide
      perspective
      smex
@@ -115,8 +103,7 @@
      multifiles
      neotree
      dash-at-point
-     anaconda-mode
-     kotlin-mode
+     yaml-mode
      )))
 
 (condition-case nil
@@ -148,16 +135,11 @@
 (eval-after-load 'grep '(require 'setup-rgrep))
 (eval-after-load 'shell '(require 'setup-shell))
 (require 'setup-hippie)
-(require 'setup-yasnippet)
 (require 'setup-perspective)
 (require 'setup-ffip)
-(require 'setup-html-mode)
 (require 'setup-paredit)
 (require 'setup-dash)
 (require 'setup-powerline)
-
-(require 'prodigy)
-(global-set-key (kbd "C-x M-m") 'prodigy)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
@@ -166,25 +148,15 @@
 (require 'smartparens-config)
 (setq sp-autoescape-string-quote nil)
 (--each '(css-mode-hook
-          restclient-mode-hook
-          js-mode-hook
-          java-mode
           markdown-mode)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
-(eval-after-load 'kotlin-mode '(require 'setup-kotlin))
-(eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
-(eval-after-load 'java-mode '(require 'setup-java))
-(require 'setup-agda)
-(require 'setup-python)
 (require 'setup-purescript)
 
 ;; Load stuff on demand
-(autoload 'skewer-start "setup-skewer" nil t)
-(autoload 'skewer-demo "setup-skewer" nil t)
 (autoload 'auto-complete-mode "auto-complete" nil t)
 (eval-after-load 'flycheck '(require 'setup-flycheck))
 
