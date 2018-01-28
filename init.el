@@ -63,46 +63,46 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(dash
-     haskell-mode
-     magit
-     paredit
-     move-text
-     gist
-     visual-regexp
-     markdown-mode
+   '(css-eldoc
+     dash
+     dash-at-point
+     dockerfile-mode
+     elisp-slime-nav
      fill-column-indicator
-     flycheck
-     flycheck-pos-tip
+     find-file-in-project
      flx
      flx-ido
-     css-eldoc
-     smartparens
-     ido-vertical-mode
-     ido-at-point
-     simple-httpd
+     flycheck
+     flycheck-pos-tip
+     gist
      guide-key
-     restclient
+     haskell-mode
      highlight-escape-sequences
-     whitespace-cleanup-mode
-     elisp-slime-nav
-     dockerfile-mode
-     protobuf-mode
-     rainbow-delimiters
-     purescript-mode
-     string-inflection
-     psc-ide
-     perspective
-     smex
+     ido-at-point
      ido-completing-read+
-     find-file-in-project
-     multiple-cursors
+     ido-vertical-mode
      jump-char
-     wgrep
-     smart-forward
+     magit
+     markdown-mode
+     move-text
      multifiles
+     multiple-cursors
      neotree
-     dash-at-point
+     paredit
+     perspective
+     protobuf-mode
+     psc-ide
+     purescript-mode
+     rainbow-delimiters
+     restclient
+     simple-httpd
+     smart-forward
+     smartparens
+     smex
+     string-inflection
+     visual-regexp
+     wgrep
+     whitespace-cleanup-mode
      yaml-mode
      )))
 
@@ -189,7 +189,6 @@
 (require 'change-inner)
 (require 'multifiles)
 (require 'setup-neotree)
-(require 'nix-mode)
 (require 'protobuf-mode)
 
 ;; Don't use expand-region fast keys
@@ -214,10 +213,9 @@
 (require 'key-bindings)
 
 ;; Misc
-(require 'project-archetypes)
 (require 'my-misc)
 
-;; Always engage mac mode
+;; Engage mac mode
 (require 'mac)
 
 ;; Elisp go-to-definition with M-. and back again with M-,
