@@ -70,9 +70,6 @@
 ;; Don't open files from the workspace in a new frame
 (setq ns-pop-up-frames nil)
 
-;; Use aspell for spell checking: brew install aspell --lang=en
-(setq ispell-program-name "/usr/local/bin/aspell")
-
 ;; Open files
 (defun mac-open-current-file ()
   (interactive)
