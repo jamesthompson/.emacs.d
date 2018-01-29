@@ -31,9 +31,6 @@
 (global-set-key (kbd "C-x 8 8") (λ (insert "∞")))
 (global-set-key (kbd "C-x 8 ( c )") (λ (insert "©")))
 
-;; Add JSP expansions to html-mode
-(eval-after-load "sgml-mode" '(require 'jsp-expansions))
-
 ;; A bit of misc cargo culting in misc.el
 (setq xterm-mouse-mode t)
 
