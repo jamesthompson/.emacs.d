@@ -11,6 +11,9 @@
 (add-to-list 'auto-mode-alist '("\\.tag$" . html-mode))
 (add-to-list 'auto-mode-alist '("\\.vm$" . html-mode))
 
+;; JSON
+(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+
 ;; SVG
 (add-to-list 'auto-mode-alist '("\\.svg$" . image-mode))
 
