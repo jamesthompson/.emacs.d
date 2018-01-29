@@ -323,7 +323,7 @@
 
 ;; Dash settings
 (global-set-key (kbd "C-c d") 'dash-at-point)
-(global-set-key (kbd "C-c e") 'dash-at-point-with-docset)
+;; (global-set-key (kbd "C-c e") 'dash-at-point-with-docset)
 
 ;; Number hacks
 (global-set-key (kbd "C-c +") 'increment-number-at-point)
@@ -333,7 +333,7 @@
 (global-set-key (kbd "C-i") 'indent-region)
 
 ;; Completion that uses many different methods to find options.
-(global-set-key (kbd "C-e") 'hippie-expand-no-case-fold)
+(global-set-key (kbd "C-c e") 'hippie-expand-no-case-fold)
 (global-set-key (kbd "C-:") 'hippie-expand-lines)
 (global-set-key (kbd "C-,") 'completion-at-point)
 

@@ -32,7 +32,7 @@ I manually installed Emacs cocoa binary into /Applications.
 
  * Help is bound to `F1`. `C-h` is rebound to backspace, like in the shell.
 
- * Autocomplete with `C-e`
+ * Autocomplete with `C-c e`
 
  * Expand-region is bound to `C-'`
 
