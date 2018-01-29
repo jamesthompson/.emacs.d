@@ -314,26 +314,6 @@ region-end is used."
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR.")
 
-(defun css-expand-statement ()
-  (interactive)
-  (save-excursion
-    (end-of-line)
-    (search-backward "{")
-    (forward-char 1)
-    (let ((beg (point)))
-      (newline)
-      (er/mark-inside-pairs)
-      (replace-regexp ";" ";\n" nil (region-beginning) (region-end))
-      (indent-region beg (point)))))
-
-(defun css-contract-statement ()
-  (interactive)
-  (end-of-line)
-  (search-backward "{")
-  (while (not (looking-at "}"))
-    (join-line -1))
-  (back-to-indentation))
-
 (defun increment-number-at-point ()
   (interactive)
   (skip-chars-backward "0123456789")

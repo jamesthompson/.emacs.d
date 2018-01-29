@@ -1,5 +1,3 @@
-;; Turn off mouse interface early in startup to avoid momentary display
-
 (package-initialize)
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -25,7 +23,7 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
-;; Set up appearance early
+;; Set up appearance
 (require 'appearance)
 
 ;; Settings for currently logged in user
@@ -63,8 +61,7 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(css-eldoc
-     dockerfile-mode
+   '(dockerfile-mode
      elisp-slime-nav
      fill-column-indicator
      find-file-in-project
@@ -79,6 +76,7 @@
      ido-at-point
      ido-completing-read+
      ido-vertical-mode
+     json-mode
      jump-char
      magit
      markdown-mode
@@ -92,8 +90,6 @@
      psc-ide
      purescript-mode
      rainbow-delimiters
-     restclient
-     simple-httpd
      smart-forward
      smartparens
      smex
@@ -144,8 +140,7 @@
 ;; Default setup of smartparens
 (require 'smartparens-config)
 (setq sp-autoescape-string-quote nil)
-(--each '(css-mode-hook
-          markdown-mode)
+(--each '(markdown-mode)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files

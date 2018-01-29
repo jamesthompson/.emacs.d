@@ -23,7 +23,7 @@
  '(ido-use-filename-at-point nil)
  '(package-selected-packages
    (quote
-    (nix-mode ido-completing-read+ browse-kill-ring+ json-mode flycheck-kotlin flycheck-purescript js2-refactor tagedit js2-mode yaml-mode kotlin-mode browse-kill-ring change-inner anaconda-mode dash neotree multifiles smart-forward wgrep jump-char multiple-cursors find-file-in-project ido-ubiquitous smex perspective exec-path-from-shell psc-ide intero string-inflection purescript-mode terraform-mode hcl-mode rainbow-delimiters protobuf-mode dash-at-point prodigy dockerfile-mode elisp-slime-nav whitespace-cleanup-mode highlight-escape-sequences restclient guide-key simple-httpd idris-mode ido-at-point ido-vertical-mode smartparens yasnippet css-eldoc dired-details flx-ido flx flycheck-pos-tip flycheck fill-column-indicator markdown-mode visual-regexp htmlize gist move-text paredit magit haskell-mode)))
+    (exec-path-from-shell yaml-mode whitespace-cleanup-mode wgrep visual-regexp string-inflection smex smartparens smart-forward rainbow-delimiters purescript-mode psc-ide protobuf-mode perspective paredit neotree multiple-cursors multifiles move-text markdown-mode magit jump-char json-mode ido-vertical-mode ido-completing-read+ ido-at-point highlight-escape-sequences haskell-mode guide-key gist flycheck-pos-tip flycheck flx-ido flx find-file-in-project fill-column-indicator elisp-slime-nav dockerfile-mode)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil
@@ -82,8 +82,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(js2-error-face ((t nil)))
- '(js2-warning-face ((t nil)))
  '(magit-diff-added-highlight ((t (:background "#000000" :foreground "#D1FA71"))))
  '(magit-diff-removed-highlight ((t (:background "#000000" :foreground "#FAB1AB"))))
  '(mode-line ((t (:foreground "#030303" :background "#bdbdbd" :box nil))))
