@@ -321,10 +321,6 @@
 (define-key occur-mode-map (kbd "n") 'next-line)
 (define-key occur-mode-map (kbd "p") 'previous-line)
 
-;; Dash settings
-(global-set-key (kbd "C-c d") 'dash-at-point)
-;; (global-set-key (kbd "C-c e") 'dash-at-point-with-docset)
-
 ;; Number hacks
 (global-set-key (kbd "C-c +") 'increment-number-at-point)
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)

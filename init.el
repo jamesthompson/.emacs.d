@@ -64,8 +64,6 @@
 (defun init--install-packages ()
   (packages-install
    '(css-eldoc
-     dash
-     dash-at-point
      dockerfile-mode
      elisp-slime-nav
      fill-column-indicator
@@ -138,7 +136,6 @@
 (require 'setup-perspective)
 (require 'setup-ffip)
 (require 'setup-paredit)
-(require 'setup-dash)
 (require 'setup-powerline)
 
 ;; Font lock dash.el
