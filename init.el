@@ -147,6 +147,7 @@
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 (require 'setup-purescript)
+(require 'setup-agda)
 
 ;; Load stuff on demand
 (autoload 'auto-complete-mode "auto-complete" nil t)

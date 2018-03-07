@@ -1,3 +1,7 @@
+;; agda
+(autoload 'agda2-mode "agda2-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.agda$" . agda2-mode))
+
 ;; YAML
 (autoload 'yaml-mode "yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))

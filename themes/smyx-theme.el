@@ -247,6 +247,18 @@
    `(ack-line ((,class (:foreground ,smyx-yellow))))
    `(ack-match ((,class (:foreground ,smyx-orange :background ,smyx-bg-1 :weigth bold))))
 
+   ;; agda
+   `(agda2-highlight-keyword-face ((,class (:foreground ,smyx-green))))
+   `(agda2-highlight-module-face ((,class (:foreground ,smyx-cyan))))
+   `(agda2-highlight-function-face ((,class (:foreground ,smyx-blue))))
+   `(agda2-highlight-operator-face ((,class (:foreground ,smyx-blue))))
+   `(agda2-highlight-datatype-face ((,class (:foreground ,smyx-blue))))
+   `(agda2-highlight-record-face ((,class (:foreground ,smyx-blue))))
+   `(agda2-highlight-symbol-face ((,class (:foreground ,smyx-white :weight bold))))
+   `(agda2-highlight-inductive-constructor-face ((,class (:foreground ,smyx-green+1))))
+   `(agda2-highlight-primitive-type-face ((,class (:foreground ,smyx-blue+1))))
+   `(agda2-highlight-postulate-face ((,class (:foreground ,smyx-white))))
+
    ;; auctex
    `(font-latex-bold ((,class (:inherit bold))))
    `(font-latex-warning ((,class (:inherit font-lock-warning))))

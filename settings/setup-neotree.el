@@ -4,4 +4,6 @@
 
 (setq neo-theme 'ascii)
 
+(setq neo-hidden-regexp-list '("^\\." "\\.cs\\.meta$" "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.agdai"))
+
 (provide 'setup-neotree)
