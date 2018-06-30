@@ -98,6 +98,7 @@
      wgrep
      whitespace-cleanup-mode
      yaml-mode
+     org-bullets
      )))
 
 (condition-case nil
@@ -147,7 +148,6 @@
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 (require 'setup-purescript)
-(require 'setup-agda)
 
 ;; Load stuff on demand
 (autoload 'auto-complete-mode "auto-complete" nil t)
@@ -228,3 +228,4 @@
 ;; Conclude init by setting up specifics for the current user
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
+

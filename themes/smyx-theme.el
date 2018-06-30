@@ -256,7 +256,8 @@
    `(agda2-highlight-record-face ((,class (:foreground ,smyx-blue))))
    `(agda2-highlight-symbol-face ((,class (:foreground ,smyx-white :weight bold))))
    `(agda2-highlight-inductive-constructor-face ((,class (:foreground ,smyx-green+1))))
-   `(agda2-highlight-primitive-type-face ((,class (:foreground ,smyx-blue+1))))
+   `(agda2-highlight-primitive-type-face ((,class (:foreground ,smyx-blue))))
+   `(agda2-highlight-primitive-face ((,class (:foreground ,smyx-blue))))
    `(agda2-highlight-postulate-face ((,class (:foreground ,smyx-white))))
 
    ;; auctex
