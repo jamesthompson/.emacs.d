@@ -23,7 +23,7 @@
  '(ido-use-filename-at-point nil)
  '(package-selected-packages
    (quote
-    (cloc org-bullets org-bullets-mode exec-path-from-shell yaml-mode whitespace-cleanup-mode wgrep visual-regexp string-inflection smex smartparens smart-forward rainbow-delimiters purescript-mode psc-ide protobuf-mode perspective paredit neotree multiple-cursors multifiles move-text markdown-mode magit jump-char json-mode ido-vertical-mode ido-completing-read+ ido-at-point highlight-escape-sequences haskell-mode guide-key gist flycheck-pos-tip flycheck flx-ido flx find-file-in-project fill-column-indicator elisp-slime-nav dockerfile-mode)))
+    (## company-go cloc org-bullets org-bullets-mode exec-path-from-shell yaml-mode whitespace-cleanup-mode wgrep visual-regexp string-inflection smex smartparens smart-forward rainbow-delimiters purescript-mode psc-ide protobuf-mode perspective paredit neotree multiple-cursors multifiles move-text markdown-mode magit jump-char json-mode ido-vertical-mode ido-completing-read+ ido-at-point highlight-escape-sequences haskell-mode guide-key gist flycheck-pos-tip flycheck flx-ido flx find-file-in-project fill-column-indicator elisp-slime-nav dockerfile-mode)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil

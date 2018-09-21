@@ -99,6 +99,10 @@
      whitespace-cleanup-mode
      yaml-mode
      org-bullets
+     go-mode
+     go-eldoc
+     company
+     company-go
      )))
 
 (condition-case nil
@@ -146,6 +150,7 @@
 
 ;; Language specific setup files
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
+(eval-after-load 'go-mode '(require 'setup-golang))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 (require 'setup-purescript)
 
