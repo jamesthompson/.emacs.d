@@ -103,6 +103,7 @@
      go-eldoc
      company
      company-go
+     gradle-mode
      )))
 
 (condition-case nil

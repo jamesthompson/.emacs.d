@@ -23,6 +23,7 @@
   (lambda ()
     (add-hook 'before-save-hook 'gofmt-before-save)
     (linum-mode 1)
+    (paredit-mode 1)
     (setq tab-width 2)
     (setq indent-tabs-mode 1)))
 (provide 'setup-golang)
