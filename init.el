@@ -150,6 +150,7 @@
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
+(eval-after-load 'dhall-mode '(require 'setup-dhall))
 (eval-after-load 'haskell-mode '(require 'setup-haskell))
 (eval-after-load 'go-mode '(require 'setup-golang))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
