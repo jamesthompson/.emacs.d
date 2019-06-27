@@ -104,6 +104,7 @@
      company
      company-go
      gradle-mode
+     use-package
      )))
 
 (condition-case nil
