@@ -181,7 +181,7 @@
    `(mode-line
      ((,class (:foreground ,smyx-blue ;;; dominant
                            :background ,smyx-black-2))))
-   `(mode-line-buffer-id ((,class (:foreground ,smyx-black :weight bold))))
+   `(mode-line-buffer-id ((,class (:foreground ,smyx-white :weight bold))))
 
    `(mode-line-inactive
      ((,class (:foreground ,smyx-white
