@@ -45,32 +45,32 @@
 
 ;; Theme(s) & font(s) stuff
 
-;; (use-package doom-themes
-;;   :config
-;;   (load-theme 'doom-tomorrow-night)
-;;   (doom-themes-visual-bell-config)
-;;   (doom-themes-org-config)
-;;   (custom-theme-set-faces
-;;    'doom-tomorrow-night
-;;     '(font-lock-doc-face ((t (:foreground "#D8D2C1")))))) ;; Lighten docstrings
+(use-package doom-themes
+  :config
+  (load-theme 'doom-tomorrow-night)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config)
+  (custom-theme-set-faces
+   'doom-tomorrow-night
+    '(font-lock-doc-face ((t (:foreground "#D8D2C1")))))) ;; Lighten docstrings
 
-(setq custom-theme-directory (concat user-emacs-directory "themes"))
+;; (setq custom-theme-directory (concat user-emacs-directory "themes"))
 
-(dolist
-    (path (directory-files custom-theme-directory t "\\w+"))
-  (when (file-directory-p path)
-    (add-to-list 'custom-theme-load-path path)))
+;; (dolist
+;;     (path (directory-files custom-theme-directory t "\\w+"))
+;;   (when (file-directory-p path)
+;;     (add-to-list 'custom-theme-load-path path)))
 
-(setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-10-*-*-*-m-0-iso10646-1")
-(setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
-(set-face-attribute 'default nil :font james/default-font)
+;; (setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+;; (setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
+;; (set-face-attribute 'default nil :font james/default-font)
 
-(defun use-default-theme ()
-  (interactive)
-  (load-theme 'smyx)
-  (when (boundp 'james/default-font)
-    (set-face-attribute 'default nil :font james/default-font)))
-(use-default-theme)
+;; (defun use-default-theme ()
+;;   (interactive)
+;;   (load-theme 'smyx)
+;;   (when (boundp 'james/default-font)
+;;     (set-face-attribute 'default nil :font james/default-font)))
+;; (use-default-theme)
 
 
 
@@ -536,6 +536,8 @@
 (diminish 'whitespace-cleanup-mode)
 (diminish 'subword-mode)
 
+(use-package all-the-icons)
+
 (use-package doom-modeline
   :ensure t
   :init
@@ -546,8 +548,9 @@
     '(misc-info minor-modes input-method buffer-encoding process checker))
   (setq doom-modeline-height 32
         doom-modeline-minor-modes t
-        doom-modeline-icon nil
-        doom-modeline-major-mode-icon nil
+        doom-modeline-icon t
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
         doom-modeline-buffer-file-name-style 'truncate-upto-project
         doom-modeline-vcs-max-length 32
         doom-modeline-indent-info t)
@@ -662,6 +665,7 @@
   (company-abort-manual-when-too-short t)
   :config
   (global-company-mode)
+  (setq company-idle-delay 0.2)
   ;; use numbers 0-9 to select company completion candidates
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
