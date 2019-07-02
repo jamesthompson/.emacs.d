@@ -24,9 +24,9 @@
 
 ;; Setup package archives
 (append-to-list package-archives
-  '(("melpa" . "https://melpa.org/packages/")
-    ("melpa-stable" . "https://stable.melpa.org/packages/")
-    ("org-elpa" . "https://orgmode.org/elpa/")))
+                '(("melpa" . "https://melpa.org/packages/")
+                  ("melpa-stable" . "https://stable.melpa.org/packages/")
+                  ("org-elpa" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
 
@@ -52,25 +52,9 @@
   (doom-themes-org-config)
   (custom-theme-set-faces
    'doom-tomorrow-night
-    '(font-lock-doc-face ((t (:foreground "#D8D2C1")))))) ;; Lighten docstrings
-
-;; (setq custom-theme-directory (concat user-emacs-directory "themes"))
-
-;; (dolist
-;;     (path (directory-files custom-theme-directory t "\\w+"))
-;;   (when (file-directory-p path)
-;;     (add-to-list 'custom-theme-load-path path)))
-
-;; (setq james/default-font "-apple-Meslo LG S for Powerline-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-;; (setq james/presentation-font "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
-;; (set-face-attribute 'default nil :font james/default-font)
-
-;; (defun use-default-theme ()
-;;   (interactive)
-;;   (load-theme 'smyx)
-;;   (when (boundp 'james/default-font)
-;;     (set-face-attribute 'default nil :font james/default-font)))
-;; (use-default-theme)
+   '(font-lock-doc-face ((t (:foreground "#D8D2C1")))         ;; Lighten docstrings
+     magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
+     magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
 
 
 
@@ -440,10 +424,10 @@
 ;; Function to create new functions that look for a specific pattern
 (defun ffip-create-pattern-file-finder (&rest patterns)
   (lexical-let ((patterns patterns))
-    (lambda ()
-      (interactive)
-      (let ((ffip-patterns patterns))
-        (find-file-in-project)))))
+               (lambda ()
+                 (interactive)
+                 (let ((ffip-patterns patterns))
+                   (find-file-in-project)))))
 
 ;; Default excludes - override with ffip-local-excludes
 
@@ -544,9 +528,10 @@
   :hook (after-init . doom-modeline-mode)
   :config
   (doom-modeline-def-modeline 'plain-modeline
-    '(major-mode bar matches buffer-info vcs buffer-position parrot selection-info)
+    '(bar major-mode matches buffer-info vcs buffer-position parrot selection-info)
     '(misc-info minor-modes input-method buffer-encoding process checker))
   (setq doom-modeline-height 32
+        doom-modeline-bar-width 6
         doom-modeline-minor-modes t
         doom-modeline-icon t
         doom-modeline-major-mode-icon t
