@@ -572,6 +572,8 @@
   :bind (("C-c n" . er/expand-region)))
 
 ;; Deadgrep (ripgrep (rg) within emacs)
+(use-package spinner
+  :pin melpa-stable)
 (use-package deadgrep
   :bind (("C-c G" . deadgrep)))
 
