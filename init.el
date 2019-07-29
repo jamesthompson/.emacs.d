@@ -704,7 +704,9 @@
   :config
   (setq dhall-format-at-save nil))
 
-;; TODO kotlin-mode, java-mode, python-mode, markdown-mode, org
+(use-package kotlin-mode)
+
+;; TODO java-mode, python-mode, markdown-mode, org
 
 (provide 'init)
 ;;; init.el ends here
