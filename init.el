@@ -12,7 +12,17 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+;; Set path to dependencies
+(setq lisps-dir
+      (expand-file-name "lisps" user-emacs-directory))
 
+;; Set up load path
+(add-to-list 'load-path lisps-dir)
+
+;; Add external projects to load path
+(dolist (project (directory-files lisps-dir t "\\w+"))
+  (when (file-directory-p project)
+    (add-to-list 'load-path project)))
 
 ;; Package management
 
@@ -53,8 +63,8 @@
   (custom-theme-set-faces
    'doom-tomorrow-night
    '(font-lock-doc-face ((t (:foreground "#D8D2C1")))         ;; Lighten docstrings
-     magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
-     magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
+                        magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
+                        magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
 
 
 
@@ -573,7 +583,12 @@
 
 ;; Deadgrep (ripgrep (rg) within emacs)
 (use-package spinner
-  :pin melpa-stable)
+  :ensure f
+  :pin manual)
+
+(use-package spinner
+  :load-path "lisps/spinner")
+
 (use-package deadgrep
   :bind (("C-c G" . deadgrep)))
 
@@ -704,7 +719,20 @@
   :config
   (setq dhall-format-at-save nil))
 
+;; Kotlin
+
 (use-package kotlin-mode)
+
+;; ATS2
+
+(use-package ats-mode
+  :load-path "lisps/ats-mode"
+  :init
+  (add-to-list 'auto-mode-alist '("\\.hats$" . ats-mode))
+  (add-to-list 'auto-mode-alist '("\\.cats$" . ats-mode))
+  (add-to-list 'auto-mode-alist '("\\.dats$" . ats-mode))
+  (add-to-list 'auto-mode-alist '("\\.sats$" . ats-mode))
+  (add-to-list 'auto-mode-alist '("\\.pats$" . ats-mode)))
 
 ;; TODO java-mode, python-mode, markdown-mode, org
 
