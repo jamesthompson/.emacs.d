@@ -610,6 +610,11 @@
   (set-default 'magit-no-confirm '(stage-all-changes
                                    unstage-all-changes)))
 
+(use-package git-gutter
+  :ensure t
+  :init
+  (global-git-gutter-mode +1))
+
 ;; flycheck
 
 (use-package flycheck
