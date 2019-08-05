@@ -1,0 +1,39 @@
+* .emacs.d
+
+This is my .emacs.d config.
+
+** use-package
+
+Is used throughout the init.el file. Custom lisps are housed in [[file:lisps/][lisps]].
+
+** Core packages
+
+*** doom-themes
+*** ido-vertical-mode
+*** magit
+*** find-file-in-project
+*** company
+*** flycheck
+*** expand-region
+*** deadgrep
+*** display-line-numbers-mode (used throughout)
+*** org
+
+** Core language support
+
+*** haskell
+*** protobuf
+*** nix
+*** dhall
+*** kotlin
+*** json
+*** ats2
+*** lisps (paredit, rainbow-delimiters)
+
+** Pending language support
+
+*** java
+*** python
+*** markdown
+*** golang
+*** rust
