@@ -623,18 +623,18 @@
 
   (defun adjust-flycheck-automatic-syntax-eagerness ()
     "Adjusts how often error checking runs based on error quantity.
-   i.e. Fixes errors as quickly as possible, but in a
-   clean buffer error checking is much less frequent."
+     i.e. Fixes errors as quickly as possible, but in a
+     clean buffer error checking is much less frequent."
     (setq flycheck-idle-change-delay
           (if flycheck-current-errors 0.5 30.0)))
 
   (defun flycheck-handle-idle-change ()
     "Handle an expired idle time since the last change.
-   Overwritten version of the original flycheck-handle-idle-change,
-    which removes the forced deferred.
-   Timers should only trigger inbetween commands in a single
-   threaded system and the forced deferred makes errors never show
-   up before you execute another command."
+     Overwritten version of the original flycheck-handle-idle-change,
+     which removes the forced deferred.
+     Timers should only trigger inbetween commands in a single
+     threaded system and the forced deferred makes errors never show
+     up before you execute another command."
     (flycheck-clear-idle-change-timer)
     (flycheck-buffer-automatically 'idle-change))
 
@@ -684,14 +684,14 @@
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
   (add-hook 'haskell-mode-hook 'flycheck-mode))
 
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init
-  :config
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
+;; (use-package dante
+;;   :ensure t
+;;   :after haskell-mode
+;;   :commands 'dante-mode
+;;   :init
+;;   :config
+;;   (add-hook 'haskell-mode-hook 'dante-mode)
+;;   (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
 
 
 ;; Protobuf
