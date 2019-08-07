@@ -8,32 +8,39 @@ Is used throughout the init.el file. Custom lisps are housed in [[file:lisps/][l
 
 ** Core packages
 
-*** doom-themes
-*** ido-vertical-mode
-*** magit
-*** find-file-in-project
-*** company
-*** flycheck
-*** expand-region
-*** deadgrep
-*** display-line-numbers-mode (used throughout)
-*** org
+| package                   | details         |
+|---------------------------+-----------------|
+| doom-themes               |                 |
+| ido-vertical-mode         |                 |
+| magit                     |                 |
+| find-file-in-project      |                 |
+| company                   |                 |
+| flycheck                  |                 |
+| expand-region             |                 |
+| deadgrep                  |                 |
+| display-line-numbers-mode | used throughout |
+| org                       |                 |
+
 
 ** Core language support
 
-*** haskell
-*** protobuf
-*** nix
-*** dhall
-*** kotlin
-*** json
-*** ats2
-*** lisps (paredit, rainbow-delimiters)
+| language | details                     |
+|----------+-----------------------------|
+| haskell  |                             |
+| protobuf |                             |
+| nix      |                             |
+| dhall    |                             |
+| kotlin   |                             |
+| json     |                             |
+| ats2     |                             |
+| lisps    | paredit, rainbow-delimiters |
 
 ** Pending language support
 
-*** java
-*** python
-*** markdown
-*** golang
-*** rust
+| language | details |
+|----------+---------|
+| java     |         |
+| python   |         |
+| markdown |         |
+| golang   |         |
+| rust     |         |
