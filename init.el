@@ -740,6 +740,8 @@
   (add-to-list 'auto-mode-alist '("\\.sats$" . ats-mode))
   (add-to-list 'auto-mode-alist '("\\.pats$" . ats-mode)))
 
+(use-package dockerfile-mode)
+
 ;; TODO java-mode, python-mode, markdown-mode, org
 
 (provide 'init)
