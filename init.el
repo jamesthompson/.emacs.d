@@ -742,6 +742,11 @@
 
 (use-package dockerfile-mode)
 
+(use-package gradle-mode)
+(use-package groovy-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode)))
+
 ;; TODO java-mode, python-mode, markdown-mode, org
 
 (provide 'init)
