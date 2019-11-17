@@ -506,12 +506,13 @@
   (replace-match (number-to-string (- (string-to-number (match-string 0)) 1))))
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
 
-;; Indent region
+
+;; Indent region (n.b. C-x TAB <left> <right> for interative indentation)
 (global-set-key (kbd "C-i") 'indent-region)
+
 
 ;; Automagic word completion
 (global-set-key (kbd "C-c E") 'hippie-expand-no-case-fold)
-
 
 
 ;; Package loading / setup
