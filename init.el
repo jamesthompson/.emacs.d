@@ -40,6 +40,13 @@
 
 (package-initialize)
 
+;; quelpa
+
+(unless (require 'quelpa nil t)
+  (with-temp-buffer
+    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
+    (eval-buffer)))
+
 ;; use-package is the means to configure everything else
 
 (unless (package-installed-p 'use-package)
@@ -516,6 +523,8 @@
 
 
 ;; Package loading / setup
+
+(use-package quelpa-use-package)
 
 (use-package paredit)
 
