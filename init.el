@@ -2,9 +2,9 @@
 
 ;; Early sane defaults
 
-;; Garbage collection settings
-(setq gc-cons-threshold 2048000000 ;; 2 Gb
-      garbage-collection-messages t)
+;; Garbage collection start up settings
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6)
 
 ;; Recursion limit
 (setq max-lisp-eval-depth 2000)
@@ -657,10 +657,6 @@
                                                       idle-change
                                                       mode-enabled)))
 
-(use-package flycheck-haskell
-  :commands flycheck-haskell-setup)
-
-
 ;; Company
 
 (use-package company
@@ -685,19 +681,8 @@
 (use-package haskell-mode
   :mode ("\\.hs$" . haskell-mode)
   :config
-  (setq haskell-stylish-on-save t
-        flycheck-check-syntax-automatically '(save-mode-enabled))
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (add-hook 'haskell-mode-hook 'flycheck-mode))
-
-;; (use-package dante
-;;   :ensure t
-;;   :after haskell-mode
-;;   :commands 'dante-mode
-;;   :init
-;;   :config
-;;   (add-hook 'haskell-mode-hook 'dante-mode)
-;;   (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
+  (setq haskell-stylish-on-save t)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 
 ;; Protobuf
@@ -710,10 +695,14 @@
                '((c-basic-offset . 2)
                  (indent-tabs-mode . nil))))
 
-;; Nix
+;; JSON
 
 (use-package json-mode
   :mode "\\.json\\'")
+
+(use-package yaml-mode)
+
+;; Nix
 
 (use-package nix-mode
   :mode "\\.nix\\'")
@@ -724,10 +713,6 @@
   :init
   :config
   (setq dhall-format-at-save nil))
-
-;; Kotlin
-
-(use-package kotlin-mode)
 
 ;; ATS2
 
@@ -740,14 +725,46 @@
   (add-to-list 'auto-mode-alist '("\\.sats$" . ats-mode))
   (add-to-list 'auto-mode-alist '("\\.pats$" . ats-mode)))
 
-(use-package dockerfile-mode)
+;; JVM Stuff
+
+(use-package kotlin-mode)
 
 (use-package gradle-mode)
+
 (use-package groovy-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode)))
 
-;; TODO java-mode, python-mode, markdown-mode, org
+;; Build Tools
+
+(use-package dockerfile-mode)
+
+(use-package bazel-mode)
+
+
+;; Sundry other stuff
+
+(use-package string-inflection)
+
+
+;; Package setup end
+
+;; Garbage collection settings
+(setq gc-cons-threshold 16777216
+      gc-cons-percentage 0.1)
+
+(defun defer-garbage-collection ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun restore-garbage-collection ()
+  ;; Defer it so that commands launched immediately after will enjoy the
+  ;; benefits.
+  (run-at-time
+   1 nil (lambda () (setq gc-cons-threshold 16777216))))
+
+(add-hook 'minibuffer-setup-hook #'defer-garbage-collection)
+(add-hook 'minibuffer-exit-hook #'restore-garbage-collection)
 
 (provide 'init)
+
 ;;; init.el ends here
