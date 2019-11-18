@@ -524,6 +524,10 @@
 
 ;; Package loading / setup
 
+(use-package direnv
+  :config
+  (direnv-mode))
+
 (use-package quelpa-use-package)
 
 (use-package paredit)
