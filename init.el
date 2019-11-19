@@ -633,6 +633,7 @@
 ;; flycheck
 
 (use-package flycheck
+  :ensure t
   :commands (flycheck-mode
              flycheck-next-error
              flycheck-previous-error)
@@ -696,8 +697,26 @@
   :mode ("\\.hs$" . haskell-mode)
   :config
   (setq haskell-stylish-on-save t)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (add-hook 'haskell-mode-hook 'flycheck-mode))
 
+(use-package yasnippet
+  :ensure t)
+
+(use-package lsp-mode
+  :ensure t
+  :hook (haskell-mode . lsp)
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+(use-package lsp-haskell
+  :ensure t
+  :config
+  (setq lsp-haskell-process-path-hie "ghcide")
+  (setq lsp-haskell-process-args-hie '()))
 
 ;; Protobuf
 
