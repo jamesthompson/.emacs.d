@@ -684,7 +684,7 @@
   (company-abort-manual-when-too-short t)
   :config
   (global-company-mode)
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0.15)
   ;; use numbers 0-9 to select company completion candidates
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
