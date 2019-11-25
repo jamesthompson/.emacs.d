@@ -747,6 +747,10 @@
 
 (use-package kotlin-mode)
 
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
+
 (use-package gradle-mode)
 
 (use-package groovy-mode
