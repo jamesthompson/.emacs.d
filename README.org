@@ -24,23 +24,26 @@ Is used throughout the init.el file. Custom lisps are housed in [[file:lisps/][l
 
 ** Core language support
 
-| language | details                     |
-|----------+-----------------------------|
-| haskell  |                             |
-| protobuf |                             |
-| nix      |                             |
-| dhall    |                             |
-| kotlin   |                             |
-| json     |                             |
-| ats2     |                             |
-| lisps    | paredit, rainbow-delimiters |
+| language   | details                     |
+|------------+-----------------------------|
+| ats2       |                             |
+| bazel      |                             |
+| dhall      |                             |
+| dockerfile |                             |
+| haskell    |                             |
+| json       |                             |
+| kotlin     | gradle, groovy              |
+| lisps      | paredit, rainbow-delimiters |
+| nix        |                             |
+| protobuf   |                             |
+| python     |                             |
+| scala      |                             |
 
 ** Pending language support
 
 | language | details |
 |----------+---------|
-| java     |         |
-| python   |         |
-| markdown |         |
 | golang   |         |
+| java     |         |
+| markdown |         |
 | rust     |         |
