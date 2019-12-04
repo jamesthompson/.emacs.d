@@ -768,8 +768,12 @@
 
 (use-package string-inflection)
 
-
-;; Package setup end
+;; Postgres-Style SQL Formatting
+;; n.b. Requires pgformmater (see: nixpkgs.pgformatter)
+(use-package sqlformat
+  :mode ("\\.sql$" . sql-mode)
+  :config
+  (setq sqlformat-command `pgformatter))
 
 ;; Garbage collection settings
 (setq gc-cons-threshold 16777216
