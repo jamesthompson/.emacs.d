@@ -693,10 +693,16 @@
 
 ;; Haskell
 
+(use-package ormolu
+ :quelpa
+ (ormolu
+  :fetcher github
+  :repo "vyorkin/ormolu.el")
+  :hook (haskell-mode . ormolu-format-on-save-mode))
+
 (use-package haskell-mode
   :mode ("\\.hs$" . haskell-mode)
   :config
-  (setq haskell-stylish-on-save t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 (use-package yasnippet
