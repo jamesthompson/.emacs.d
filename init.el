@@ -672,6 +672,12 @@
                                                       idle-change
                                                       mode-enabled)))
 
+;; Yasnippet
+
+(use-package yasnippet
+  :ensure t)
+
+
 ;; Company
 
 (use-package company
@@ -704,9 +710,6 @@
   :mode ("\\.hs$" . haskell-mode)
   :config
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
-
-(use-package yasnippet
-  :ensure t)
 
 
 ;; Protobuf
@@ -754,8 +757,17 @@
 (use-package kotlin-mode)
 
 (use-package scala-mode
-  :interpreter
-    ("scala" . scala-mode))
+  :mode "\\.s\\(cala\\|bt\\)$")
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+   (setq sbt:program-options '("-Dsbt.supershell=false")))
+
 
 (use-package gradle-mode)
 
