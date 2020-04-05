@@ -128,7 +128,6 @@
       history-length 1000
       enable-recursive-minibuffers t                           ;; Allow recursive minibuffers
       org-replace-disputed-keys t                              ;; org-mode: Don't prevent S-arrow to switch windows (use M-+ and M-- instead to toggle)
-      electric-indent-mode nil                                 ;; No electric indent
       eval-expression-print-level nil                          ;; Always see what's happening
       whitespace-style '(trailing lines space-before-tab
                                   indentation space-after-tab) ;; Whitespace-style
@@ -161,24 +160,24 @@
 ;; Answering just 'y' or 'n' is superior to typing three letters
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(set-terminal-coding-system 'utf-8) ;; UTF-8 everywhere by default
-(set-keyboard-coding-system 'utf-8) ;; UTF-8 everywhere by default
-(set-selection-coding-system 'utf-8) ;; UTF-8 everywhere by default
-(prefer-coding-system 'utf-8) ;; UTF-8 everywhere by default
-(global-hl-line-mode 1) ;; Highlight current line
+(set-terminal-coding-system 'utf-8)                      ;; UTF-8 everywhere by default
+(set-keyboard-coding-system 'utf-8)                      ;; UTF-8 everywhere by default
+(set-selection-coding-system 'utf-8)                     ;; UTF-8 everywhere by default
+(prefer-coding-system 'utf-8)                            ;; UTF-8 everywhere by default
+(global-hl-line-mode 1)                                  ;; Highlight current line
 (add-hook 'before-save-hook 'delete-trailing-whitespace) ;; Always delete trailing whitespace upon saving
-(global-auto-revert-mode 1) ;; Auto refresh buffers
-(transient-mark-mode 1) ;; Show active region
+(global-auto-revert-mode 1)                              ;; Auto refresh buffers
+(transient-mark-mode 1)                                  ;; Show active region
 (make-variable-buffer-local 'transient-mark-mode)
 (put 'transient-mark-mode 'permanent-local t)
-(delete-selection-mode 1) ;; Remove text in active region if inserting text
-(auto-compression-mode t) ;; Transparently open compressed files
-(add-hook 'prog-mode-hook #'display-line-numbers-mode) ;; display line numbers in any prog-mode buffer
-(savehist-mode 1) ;; Save minibuffer history
-(set-default 'indent-tabs-mode nil) ;; Never insert tabs
-(set-default 'indicate-empty-lines nil) ;; Don't show me empty lines after buffer end
-(global-subword-mode 1) ;; Easily navigate sillycased words
-(show-paren-mode 1) ;; Always highlight matching paren when point is above one
+(delete-selection-mode 1)                                ;; Remove text in active region if inserting text
+(auto-compression-mode t)                                ;; Transparently open compressed files
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)   ;; display line numbers in any prog-mode buffer
+(savehist-mode 1)                                        ;; Save minibuffer history
+(set-default 'indent-tabs-mode nil)                      ;; Never insert tabs
+(set-default 'indicate-empty-lines t)                    ;; Don't show me empty lines after buffer end
+(global-subword-mode 1)                                  ;; Easily navigate sillycased words
+(show-paren-mode 1)                                      ;; Always highlight matching paren when point is above one
 
 (setq-default transient-mark-mode t
               truncate-lines t) ;; By default truncate lines
@@ -543,6 +542,10 @@
 (diminish 'guide-key-mode)
 (diminish 'whitespace-cleanup-mode)
 (diminish 'subword-mode)
+
+(use-package aggressive-indent
+  :config (global-aggressive-indent-mode)
+  :diminish)
 
 (use-package all-the-icons)
 
