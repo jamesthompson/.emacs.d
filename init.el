@@ -62,6 +62,8 @@
 
 ;; Theme(s) & font(s) stuff
 
+(setq doom-font (font-spec :family "DejaVu Sans Mono Book" :size 12))
+
 (use-package doom-themes
   :config
   (load-theme 'doom-tomorrow-night)
@@ -522,11 +524,6 @@
 
 
 ;; Package loading / setup
-
-(use-package direnv
-  :config
-  (direnv-mode))
-
 (use-package quelpa-use-package)
 
 (use-package paredit)
