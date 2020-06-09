@@ -61,8 +61,9 @@
 
 
 ;; Theme(s) & font(s) stuff
+;; You will need to run all-the-icons-install-fonts
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono Book" :size 12))
+(set-face-attribute 'default nil :height 160)
 
 (use-package doom-themes
   :config
