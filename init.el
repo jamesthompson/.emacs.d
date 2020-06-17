@@ -746,6 +746,14 @@
   :config
   (setq dhall-format-at-save nil))
 
+(use-package dash-functional
+  :pin melpa-stable)
+
+(use-package lsp-mode
+  :hook ((dhall-mode . lsp))
+  :commands lsp
+  :pin melpa-stable)
+
 ;; ATS2
 
 (use-package ats-mode
