@@ -794,6 +794,8 @@
 
 (use-package bazel-mode)
 
+(use-package rust-mode)
+
 
 ;; Sundry other stuff
 
