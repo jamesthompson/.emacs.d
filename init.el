@@ -732,6 +732,10 @@
 
 ;; Nix
 
+(use-package direnv
+  :config
+  (direnv-mode))
+
 (use-package nix-mode
   :mode "\\.nix\\'")
 
