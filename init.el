@@ -744,13 +744,17 @@
 (use-package dhall-mode
   :init
   :config
-  (setq dhall-format-at-save nil))
+  (setq dhall-format-at-save nil)
+  (setq-local tab-width 2)
+  (setq dhall-use-header-line nil)) ;; Don't typecheck using the traditional method as we're using the lsp-server instead
+
+(add-hook 'dhall-mode-hook #'enable-paredit-mode)
 
 (use-package dash-functional
   :pin melpa-stable)
 
 (use-package lsp-mode
-  :hook ((dhall-mode . lsp))
+  :hook ((dhall-mode . lsp)) ;; typecheck dhall using the dhall-lsp-server (resolved using lorri/direnv)
   :commands lsp
   :pin melpa-stable)
 
