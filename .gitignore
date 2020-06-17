@@ -10,3 +10,4 @@ transient/
 **/.DS_Store
 eshell/
 /quelpa/
+/.lsp-session-v1
