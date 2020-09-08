@@ -63,7 +63,7 @@
 ;; Theme(s) & font(s) stuff
 ;; You will need to run all-the-icons-install-fonts
 
-(set-face-attribute 'default nil :height 160)
+(set-face-attribute 'default nil :height 120)
 
 (use-package doom-themes
   :config
@@ -740,6 +740,10 @@
   :mode "\\.nix\\'")
 
 ;; Dhall
+(use-package lsp-mode
+  :hook ((dhall-mode . lsp)) ;; typecheck dhall using the dhall-lsp-server (resolved using lorri/direnv)
+  :commands lsp
+  :pin melpa-stable)
 
 (use-package dhall-mode
   :init
@@ -751,11 +755,6 @@
 (add-hook 'dhall-mode-hook #'enable-paredit-mode)
 
 (use-package dash-functional
-  :pin melpa-stable)
-
-(use-package lsp-mode
-  :hook ((dhall-mode . lsp)) ;; typecheck dhall using the dhall-lsp-server (resolved using lorri/direnv)
-  :commands lsp
   :pin melpa-stable)
 
 ;; ATS2
