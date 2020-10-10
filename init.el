@@ -38,8 +38,6 @@
                   ("melpa-stable" . "https://stable.melpa.org/packages/")
                   ("org-elpa" . "https://orgmode.org/elpa/")))
 
-(package-initialize)
-
 ;; quelpa
 
 (unless (require 'quelpa nil t)
