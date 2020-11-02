@@ -789,6 +789,20 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode)))
 
+;; Golang stuff
+
+(use-package company-go)
+
+(use-package go-mode
+  :init
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode 1)
+              (setq tab-width 2)
+              (company-mode)
+              (set (make-local-variable 'company-backends) '(company-go))))
+  (add-hook 'before-save-hook 'gofmt-before-save))
+
 ;; Build Tools
 
 (use-package dockerfile-mode)
