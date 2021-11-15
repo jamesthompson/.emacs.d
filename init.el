@@ -61,7 +61,7 @@
 ;; Theme(s) & font(s) stuff
 ;; You will need to run all-the-icons-install-fonts
 
-(set-face-attribute 'default nil :height 120)
+(set-face-attribute 'default nil :height 140)
 
 (use-package doom-themes
   :config
@@ -86,10 +86,10 @@
       trash-directory "~/.Trash/emacs"
       ns-pop-up-frames nil)       ;; Don't open files from the workspace in a new frame
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
+;; (use-package exec-path-from-shell
+;;   :ensure t
+;;   :config
+;;   (exec-path-from-shell-initialize))
 
 
 
@@ -671,12 +671,6 @@
                                                       idle-change
                                                       mode-enabled)))
 
-;; Yasnippet
-
-(use-package yasnippet
-  :ensure t)
-
-
 ;; Company
 
 (use-package company
@@ -730,6 +724,10 @@
 
 ;; Nix
 
+(use-package envrc
+  :config
+  (envrc-global-mode))
+
 (use-package direnv
   :config
   (direnv-mode))
@@ -737,11 +735,59 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
-;; Dhall
+;; Terraform
+
+(use-package terraform-mode)
+
+;; Lsp
+
+;; Golang stuff
+
+(use-package company-go)
+
+(use-package go-mode
+  :init
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode 1)
+              (setq tab-width 2)
+              (company-mode)
+              (set (make-local-variable 'company-backends) '(company-go)))))
+
 (use-package lsp-mode
-  :hook ((dhall-mode . lsp)) ;; typecheck dhall using the dhall-lsp-server (resolved using lorri/direnv)
-  :commands lsp
-  :pin melpa-stable)
+  :pin melpa-stable
+  :ensure t
+  :commands (lsp lsp-deferred)
+  :hook ((dhall-mode . lsp) (go-mode . lsp-deferred)))
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Optional - provides fancier overlays.
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+;; Company mode is a standard completion package that works well with lsp-mode.
+(use-package company
+  :ensure t
+  :config
+  ;; Optionally enable completion-as-you-type behavior.
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1))
+
+;; Yasnippet
+(use-package yasnippet
+  :ensure t
+  :commands yas-minor-mode
+  :hook (go-mode . yas-minor-mode))
+
+;; Dhall
 
 (use-package dhall-mode
   :init
@@ -789,19 +835,6 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode)))
 
-;; Golang stuff
-
-(use-package company-go)
-
-(use-package go-mode
-  :init
-  (add-hook 'go-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode 1)
-              (setq tab-width 2)
-              (company-mode)
-              (set (make-local-variable 'company-backends) '(company-go))))
-  (add-hook 'before-save-hook 'gofmt-before-save))
 
 ;; Build Tools
 
@@ -842,3 +875,6 @@
 (provide 'init)
 
 ;;; init.el ends here
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'set-goal-column 'disabled nil)
