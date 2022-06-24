@@ -63,6 +63,9 @@
 
 (set-face-attribute 'default nil :height 140)
 
+(use-package all-the-icons
+  :ensure t)
+
 (use-package doom-themes
   :config
   (load-theme 'doom-tomorrow-night)
@@ -724,13 +727,9 @@
 
 ;; Nix
 
-(use-package envrc
-  :config
-  (envrc-global-mode))
-
-(use-package direnv
-  :config
-  (direnv-mode))
+;; (use-package envrc
+;;   :config
+;;   (envrc-global-mode))
 
 (use-package nix-mode
   :mode "\\.nix\\'")
@@ -759,6 +758,9 @@
   :ensure t
   :commands (lsp lsp-deferred)
   :hook ((dhall-mode . lsp) (go-mode . lsp-deferred)))
+
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.dist\\'"))
 
 ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
@@ -840,7 +842,7 @@
 
 (use-package dockerfile-mode)
 
-(use-package bazel-mode)
+(use-package bazel)
 
 (use-package rust-mode)
 
