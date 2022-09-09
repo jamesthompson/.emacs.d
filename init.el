@@ -89,12 +89,10 @@
       trash-directory "~/.Trash/emacs"
       ns-pop-up-frames nil)       ;; Don't open files from the workspace in a new frame
 
-;; (use-package exec-path-from-shell
-;;   :ensure t
-;;   :config
-;;   (exec-path-from-shell-initialize))
-
-
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; Sane defaults
 
@@ -725,11 +723,15 @@
 
 (use-package yaml-mode)
 
-;; Nix
+;; Nix / Environments
 
-;; (use-package envrc
-;;   :config
-;;   (envrc-global-mode))
+(use-package direnv
+  :config
+  (direnv-mode))
+
+(use-package envrc
+  :config
+  (envrc-global-mode))
 
 (use-package nix-mode
   :mode "\\.nix\\'")
