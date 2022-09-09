@@ -723,6 +723,11 @@
 
 (use-package yaml-mode)
 
+;; GraphQL
+
+(use-package graphql-mode)
+(add-to-list 'auto-mode-alist '("\\.graphqls\\'" . graphql-mode))
+
 ;; Nix / Environments
 
 (use-package direnv
