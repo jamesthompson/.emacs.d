@@ -550,7 +550,7 @@
   :config
   (doom-modeline-def-modeline 'plain-modeline
     '(bar major-mode matches buffer-info vcs buffer-position parrot selection-info)
-    '(misc-info minor-modes input-method buffer-encoding process checker))
+    '(misc-info minor-modes input-method buffer-encoding process))
   (setq doom-modeline-height 32
         doom-modeline-bar-width 6
         doom-modeline-minor-modes t
@@ -558,9 +558,9 @@
         doom-modeline-vcs-max-length 32
         doom-modeline-indent-info t)
   (when window-system
-      (setq doom-modeline-icon t
-            doom-modeline-major-mode-icon t
-            doom-modeline-major-mode-color-icon t))
+    (setq doom-modeline-icon t
+          doom-modeline-major-mode-icon t
+          doom-modeline-major-mode-color-icon t))
   (doom-modeline-set-modeline 'plain-modeline 'default))
 
 ;; ido stuff
