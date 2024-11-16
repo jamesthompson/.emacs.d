@@ -56,8 +56,6 @@
 (setq use-package-always-ensure t
       use-package-verbose t)
 
-
-
 ;; Theme(s) & font(s) stuff
 ;; You will need to run all-the-icons-install-fonts
 
@@ -76,8 +74,6 @@
    '(font-lock-doc-face ((t (:foreground "#D8D2C1")))         ;; Lighten docstrings
                         magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
                         magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
-
-
 
 ;; Mac-specific defaults
 
@@ -466,6 +462,7 @@
                  "/.stack-work")))
 
 (global-set-key (kbd "C-x o") 'find-file-in-project)
+(global-set-key (kbd "C-x g l") 'goto-line)
 
 ;; Finding files
 (use-package s)
@@ -796,19 +793,14 @@
   :commands yas-minor-mode
   :hook (go-mode . yas-minor-mode))
 
-;; Dhall
-
-(use-package dhall-mode
-  :init
-  :config
-  (setq dhall-format-at-save nil)
-  (setq-local tab-width 2)
-  (setq dhall-use-header-line nil)) ;; Don't typecheck using the traditional method as we're using the lsp-server instead
-
-(add-hook 'dhall-mode-hook #'enable-paredit-mode)
+;; Dash
 
 (use-package dash-functional
   :pin melpa-stable)
+
+;; Typescript / TSX - Frontend Stuff
+
+(use-package typescript-mode)
 
 ;; ATS2
 
