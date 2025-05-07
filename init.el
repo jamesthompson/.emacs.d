@@ -27,23 +27,18 @@
 ;; Package management
 
 (require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org-elpa" . "https://orgmode.org/elpa/")
+        ("gnu" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
 
 (defmacro append-to-list (target suffix)
   "Append suffix to target in place"
   `(setq ,target (append ,target ,suffix)))
 
-;; Setup package archives
-(append-to-list package-archives
-                '(("melpa" . "https://melpa.org/packages/")
-                  ("melpa-stable" . "https://stable.melpa.org/packages/")
-                  ("org-elpa" . "https://orgmode.org/elpa/")))
-
-;; quelpa
-
-(unless (require 'quelpa nil t)
-  (with-temp-buffer
-    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
-    (eval-buffer)))
 
 ;; use-package is the means to configure everything else
 
@@ -51,10 +46,12 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 (setq use-package-always-ensure t
-      use-package-verbose t)
+      use-package-verbose t
+      use-package-defer t)
 
 ;; Theme(s) & font(s) stuff
 ;; You will need to run all-the-icons-install-fonts
@@ -248,8 +245,10 @@
              (local-set-key (kbd "M-k") 'clear-shell)))
 
 ;; Paredit for emacs-lisp-mode
-(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-
+(use-package paredit
+  :ensure t
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
 
 ;; Global key bindings
 
@@ -521,13 +520,12 @@
 
 
 ;; Package loading / setup
-(use-package quelpa-use-package)
-
-(use-package paredit)
 
 ;; Modeline uncluttering
 (use-package diminish
   :ensure t)
+
+(use-package paredit)
 
 (diminish 'eldoc-mode)
 (diminish 'paredit-mode)
@@ -586,7 +584,10 @@
 (use-package smex)
 
 ;; Rainbow delimiters
-(use-package rainbow-delimiters
+(use-package rainbow-delimiters)
+
+(use-package prog-mode
+  :ensure nil
   :hook ((prog-mode . rainbow-delimiters-mode)))
 
 ;; Expand region intelligently
@@ -689,13 +690,6 @@
           (number-sequence 0 9))))
 
 ;; Haskell
-
-(use-package ormolu
- :quelpa
- (ormolu
-  :fetcher github
-  :repo "vyorkin/ormolu.el")
-  :hook (haskell-mode . ormolu-format-on-save-mode))
 
 (use-package haskell-mode
   :mode ("\\.hs$" . haskell-mode)
@@ -831,11 +825,6 @@
 
 
 (use-package gradle-mode)
-
-(use-package groovy-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode)))
-
 
 ;; Build Tools
 
