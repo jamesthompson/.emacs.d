@@ -9,7 +9,7 @@
 ;; Recursion limit
 (setq max-lisp-eval-depth 2000)
 
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file "./custom.el")
 (load custom-file 'noerror)
 
 ;; Set path to dependencies
@@ -63,12 +63,12 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-tomorrow-night)
+  (load-theme 'doom-tomorrow-night :no-confirm)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config)
   (custom-theme-set-faces
    'doom-tomorrow-night
-   '(font-lock-doc-face ((t (:foreground "#D8D2C1")))         ;; Lighten docstrings
+   '(font-lock-doc-face ((t (:foreground "#D8D2C1")))                            ;; Lighten docstrings
                         magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
                         magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
 
@@ -190,8 +190,6 @@
 (add-to-list 'ido-ignore-files "\\.DS_Store")
 
 (use-package dash)
-
-
 
 ;;dired
 
@@ -514,10 +512,8 @@
 ;; Indent region (n.b. C-x TAB <left> <right> for interative indentation)
 (global-set-key (kbd "C-i") 'indent-region)
 
-
 ;; Automagic word completion
 (global-set-key (kbd "C-c E") 'hippie-expand-no-case-fold)
-
 
 ;; Package loading / setup
 
