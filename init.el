@@ -666,6 +666,10 @@
                                                       idle-change
                                                       mode-enabled)))
 
+(use-package flyover
+  :config
+  (add-hook 'flycheck-mode-hook #'flyover-mode))
+
 ;; Company
 
 (use-package company
@@ -691,7 +695,6 @@
   :mode ("\\.hs$" . haskell-mode)
   :config
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
-
 
 ;; Protobuf
 
