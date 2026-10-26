@@ -2,14 +2,15 @@
 
 ;; Early sane defaults
 
-;; Garbage collection start up settings
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
+;; Startup GC settings live in early-init.el; gcmh takes over at the end
+;; of this file.
 
 ;; Recursion limit
 (setq max-lisp-eval-depth 2000)
 
-(setq custom-file "./custom.el")
+;; Must be absolute. A relative name resolves against whatever directory
+;; Emacs started in, which found Emacs' own custom.el library instead.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
 ;; Set path to dependencies
@@ -27,7 +28,6 @@
 ;; Package management
 
 (require 'package)
-(setq package-enable-at-startup nil)
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -49,9 +49,11 @@
 (eval-when-compile
   (require 'use-package))
 
+;; The deferral variable is use-package-always-defer, not use-package-defer,
+;; so the old setting never took effect. It stays nil: UI packages need to
+;; load at startup, so language and tool modes carry :defer t individually.
 (setq use-package-always-ensure t
-      use-package-verbose t
-      use-package-defer t)
+      use-package-verbose t)
 
 ;; Theme(s) & font(s) stuff
 ;; You will need to run all-the-icons-install-fonts
@@ -82,10 +84,55 @@
       trash-directory "~/.Trash/emacs"
       ns-pop-up-frames nil)       ;; Don't open files from the workspace in a new frame
 
+;; This daemon starts from launchd, whose PATH is only /usr/bin:/bin:/usr/sbin:/sbin,
+;; so the shell environment has to be imported or gopls, cargo and kubectl go
+;; missing. The import needs an interactive zsh (the PATH exports live in
+;; .zshrc) and that costs about a second, so the result is cached and only
+;; recomputed when a shell init file changes. M-x env-cache-refresh forces it.
 (use-package exec-path-from-shell
   :ensure t
-  :config
-  (exec-path-from-shell-initialize))
+  :defer t)
+
+(defconst env-cache-file (expand-file-name "env-cache.el" user-emacs-directory))
+(defconst env-cache-variables '("PATH" "MANPATH"))
+(defconst env-cache-sources '("~/.zshenv" "~/.zprofile" "~/.zshrc"))
+
+(defun env-cache-stale-p ()
+  "Non-nil if the cache is missing or older than any shell init file."
+  (let ((cached (file-attribute-modification-time
+                 (file-attributes env-cache-file))))
+    (or (null cached)
+        (seq-some (lambda (f)
+                    (let ((attrs (file-attributes (expand-file-name f))))
+                      (and attrs
+                           (time-less-p cached
+                                        (file-attribute-modification-time attrs)))))
+                  env-cache-sources))))
+
+(defun env-cache-refresh ()
+  "Run the login shell, import the environment, and rewrite the cache."
+  (interactive)
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-copy-envs env-cache-variables)
+  (with-temp-file env-cache-file
+    (prin1 (mapcar (lambda (v) (cons v (getenv v))) env-cache-variables)
+           (current-buffer)))
+  (message "Shell environment cached in %s" env-cache-file))
+
+(defun env-cache-load ()
+  "Apply the cached shell environment without starting a shell."
+  (dolist (pair (with-temp-buffer
+                  (insert-file-contents env-cache-file)
+                  (read (current-buffer))))
+    (when (cdr pair) (setenv (car pair) (cdr pair))))
+  (setq exec-path (append (parse-colon-path (getenv "PATH"))
+                          (list exec-directory))))
+
+(if (env-cache-stale-p)
+    (env-cache-refresh)
+  (condition-case nil
+      (env-cache-load)
+    (error (env-cache-refresh))))
 
 ;; Sane defaults
 
@@ -102,16 +149,14 @@
       locale-coding-system 'utf-8
       backup-directory-alist `(("." . ,(expand-file-name
                                         (concat user-emacs-directory "backups"))))
-      vc-make-backup-files t                                   ;; Make backups of files, even when they're in version control
-      redisplay-dont-pause t                                   ;; Never defer screen updates when performing operations
       inhibit-startup-message t                                ;; Never want to see startup message
       initial-scratch-message ";; Scratch"                     ;; Scratch header
       global-auto-revert-non-file-buffers t                    ;; Also auto refresh dired, but be quiet about it
       auto-revert-verbose nil
       user-settings-dir (concat user-emacs-directory
                                 "/Users/" user-login-name)     ;; Set user settings directory
-      vc-make-backup-files t                                   ;; Make backups of files, even when they're in version control
-      x-select-enable-clipboard t                              ;; Allow pasting selection outside of Emacs
+      vc-make-backup-files nil                                 ;; Git already holds these; writing them again costs a disk write per save
+      select-enable-clipboard t                                ;; Allow pasting selection outside of Emacs
       visible-bell t
       color-theme-is-global t
       truncate-partial-width-windows nil
@@ -239,14 +284,13 @@
 
 ;; Set clear buffer for shell
 (add-hook 'shell-mode-hook
-          '(lambda()
-             (local-set-key (kbd "M-k") 'clear-shell)))
+          (lambda ()
+            (local-set-key (kbd "M-k") 'clear-shell)))
 
 ;; Paredit for emacs-lisp-mode
 (use-package paredit
   :ensure t
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
+  :hook (emacs-lisp-mode . paredit-mode))
 
 ;; Global key bindings
 
@@ -362,7 +406,7 @@
 (global-set-key (kbd "C-x C-c") 'delete-frame)
 (global-set-key (kbd "M-x") 'smex)                           ;; Smart M-x
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
+(global-set-key (kbd "C-c N") 'cleanup-buffer)               ;; C-c n is expand-region
 (global-set-key (kbd "C-H") 'help-command)                   ;; Use shell-like backspace C-h, rebind help to C-H
 (global-set-key (kbd "M-h") 'kill-region-or-backward-word)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)                ;; Manipulate whitespace
@@ -510,7 +554,9 @@
 
 
 ;; Indent region (n.b. C-x TAB <left> <right> for interative indentation)
-(global-set-key (kbd "C-i") 'indent-region)
+;; Not C-i: in a terminal C-i *is* TAB, so binding it removes TAB everywhere,
+;; including indentation, completion-at-point and org cycling.
+(global-set-key (kbd "C-c i") 'indent-region)
 
 ;; Automagic word completion
 (global-set-key (kbd "C-c E") 'hippie-expand-no-case-fold)
@@ -521,8 +567,6 @@
 (use-package diminish
   :ensure t)
 
-(use-package paredit)
-
 (diminish 'eldoc-mode)
 (diminish 'paredit-mode)
 (diminish 'elisp-slime-nav)
@@ -531,11 +575,11 @@
 (diminish 'whitespace-cleanup-mode)
 (diminish 'subword-mode)
 
+;; Scoped to lisp rather than global: it reindents the enclosing block on
+;; every change, which is expensive in large Go, TS and JSON buffers.
 (use-package aggressive-indent
-  :config (global-aggressive-indent-mode)
+  :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode)
   :diminish)
-
-(use-package all-the-icons)
 
 (use-package doom-modeline
   :ensure t
@@ -547,7 +591,7 @@
     '(misc-info minor-modes input-method buffer-encoding process))
   (setq doom-modeline-height 32
         doom-modeline-bar-width 6
-        doom-modeline-minor-modes t
+        doom-modeline-minor-modes nil     ;; rendering the full list costs a redisplay pass
         doom-modeline-buffer-file-name-style 'truncate-upto-project
         doom-modeline-vcs-max-length 32
         doom-modeline-indent-info t)
@@ -577,10 +621,10 @@
   (define-key ido-completion-map (kbd "<up>") 'ido-prev-match))
 
 ;; smex
-(use-package smex)
+(use-package smex :defer t)
 
 ;; Rainbow delimiters
-(use-package rainbow-delimiters)
+(use-package rainbow-delimiters :defer t)
 
 (use-package prog-mode
   :ensure nil
@@ -591,13 +635,9 @@
   :bind (("C-c n" . er/expand-region)))
 
 ;; Deadgrep (ripgrep (rg) within emacs)
-(use-package spinner
-  :ensure f
-  :pin manual)
-
-(use-package spinner
-  :load-path "lisps/spinner")
-
+;; spinner arrives as a dependency. The old declarations pointed :load-path at
+;; a directory that does not exist and :ensure at the unrelated package `f',
+;; leaving uncompiled lisps/spinner.el shadowing the elpa build.
 (use-package deadgrep
   :bind (("C-c G" . deadgrep)))
 
@@ -667,12 +707,14 @@
                                                       mode-enabled)))
 
 (use-package flyover
-  :config
-  (add-hook 'flycheck-mode-hook #'flyover-mode))
+  :hook (flycheck-mode . flyover-mode))
 
 ;; Company
 
 (use-package company
+  ;; :demand because :bind would otherwise defer the package and
+  ;; global-company-mode below would not run until C-c e was pressed.
+  :demand t
   :bind (("C-c e" . company-complete))
   :diminish company-mode
   :custom
@@ -682,7 +724,10 @@
   (company-abort-manual-when-too-short t)
   :config
   (global-company-mode)
-  (setq company-idle-delay 0.15)
+  ;; A 0 delay with a 1-character prefix queries the backend on every
+  ;; keystroke from the first character, which is a lot of LSP round-trips.
+  (setq company-idle-delay 0.15
+        company-minimum-prefix-length 2)
   ;; use numbers 0-9 to select company completion candidates
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
@@ -700,7 +745,7 @@
 
 (use-package protobuf-mode
   :ensure t
-  :init
+  :defer t
   :config
   (c-add-style "pb style"
                '((c-basic-offset . 2)
@@ -711,19 +756,17 @@
 (use-package json-mode
   :mode "\\.json\\'")
 
-(use-package yaml-mode)
+(use-package yaml-mode :defer t)
 
 ;; GraphQL
 
-(use-package graphql-mode)
+(use-package graphql-mode :defer t)
 (add-to-list 'auto-mode-alist '("\\.graphqls\\'" . graphql-mode))
 
 ;; Nix / Environments
 
-(use-package direnv
-  :config
-  (direnv-mode))
-
+;; envrc only. Running direnv-mode alongside it meant two direnv integrations
+;; shelling out over the same environment on every buffer switch.
 (use-package envrc
   :config
   (envrc-global-mode))
@@ -733,28 +776,34 @@
 
 ;; Terraform
 
-(use-package terraform-mode)
+(use-package terraform-mode :defer t)
 
 ;; Lsp
 
 ;; Golang stuff
 
-(use-package company-go)
-
+;; No company-go: it drives gocode, which is not installed, and setting
+;; company-backends locally cut out company-capf, which is how lsp-mode
+;; serves completions.
 (use-package go-mode
+  :mode "\\.go\\'"
   :init
   (add-hook 'go-mode-hook
             (lambda ()
               (setq indent-tabs-mode 1)
-              (setq tab-width 2)
-              (company-mode)
-              (set (make-local-variable 'company-backends) '(company-go)))))
+              (setq tab-width 2))))
 
 (use-package lsp-mode
   :pin melpa-stable
   :ensure t
   :commands (lsp lsp-deferred)
-  :hook ((dhall-mode . lsp) (go-mode . lsp-deferred)))
+  :hook ((dhall-mode . lsp) (go-mode . lsp-deferred))
+  :init
+  ;; gopls sends large JSON payloads; the 64KB default means many more read
+  ;; cycles per response.
+  (setq read-process-output-max (* 1024 1024)
+        lsp-idle-delay 0.5
+        lsp-log-io nil))
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.dist\\'"))
@@ -772,33 +821,24 @@
   :ensure t
   :commands lsp-ui-mode)
 
-;; Company mode is a standard completion package that works well with lsp-mode.
-(use-package company
-  :ensure t
-  :config
-  ;; Optionally enable completion-as-you-type behavior.
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1))
-
 ;; Yasnippet
 (use-package yasnippet
   :ensure t
   :commands yas-minor-mode
   :hook (go-mode . yas-minor-mode))
 
-;; Dash
-
-(use-package dash-functional
-  :pin melpa-stable)
-
 ;; Typescript / TSX - Frontend Stuff
+;; (dash-functional was merged into dash and is now an empty stub)
 
-(use-package typescript-mode)
+(use-package typescript-mode :defer t)
 
 ;; ATS2
 
 (use-package ats-mode
-  :load-path "lisps/ats-mode"
+  :ensure nil       ;; local copy; lisps/ is already on load-path
+  ;; :commands rather than :defer, because this file carries no autoload
+  ;; cookies, so nothing would define ats-mode when a .dats file is opened.
+  :commands (ats-mode)
   :init
   (add-to-list 'auto-mode-alist '("\\.hats$" . ats-mode))
   (add-to-list 'auto-mode-alist '("\\.cats$" . ats-mode))
@@ -808,7 +848,7 @@
 
 ;; JVM Stuff
 
-(use-package kotlin-mode)
+(use-package kotlin-mode :defer t)
 
 (use-package scala-mode
   :mode "\\.s\\(cala\\|bt\\)$")
@@ -823,20 +863,20 @@
    (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 
-(use-package gradle-mode)
+(use-package gradle-mode :defer t)
 
 ;; Build Tools
 
-(use-package dockerfile-mode)
+(use-package dockerfile-mode :defer t)
 
-(use-package bazel)
+(use-package bazel :defer t)
 
-(use-package rust-mode)
+(use-package rust-mode :defer t)
 
 
 ;; Sundry other stuff
 
-(use-package string-inflection)
+(use-package string-inflection :defer t)
 
 ;; Postgres-Style SQL Formatting
 ;; n.b. Requires pgformmater (see: nixpkgs.pgformatter)
@@ -845,21 +885,21 @@
   :config
   (setq sqlformat-command `pgformatter))
 
-;; Garbage collection settings
-(setq gc-cons-threshold 16777216
-      gc-cons-percentage 0.1)
-
-(defun defer-garbage-collection ()
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun restore-garbage-collection ()
-  ;; Defer it so that commands launched immediately after will enjoy the
-  ;; benefits.
-  (run-at-time
-   1 nil (lambda () (setq gc-cons-threshold 16777216))))
-
-(add-hook 'minibuffer-setup-hook #'defer-garbage-collection)
-(add-hook 'minibuffer-exit-hook #'restore-garbage-collection)
+;; Garbage collection.
+;; A fixed 16MB threshold on a daemon that stays up for weeks produced tens of
+;; thousands of collections mid-edit. gcmh holds the threshold high while you
+;; work and collects once Emacs goes idle, so the pauses land between
+;; keystrokes rather than during them. It also covers the minibuffer case the
+;; old defer/restore hooks handled.
+(use-package gcmh
+  :ensure t
+  :diminish
+  :init
+  (setq gcmh-idle-delay 'auto
+        gcmh-auto-idle-delay-factor 10
+        gcmh-high-cons-threshold (* 128 1024 1024))
+  :config
+  (gcmh-mode 1))
 
 (provide 'init)
 

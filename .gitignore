@@ -12,3 +12,4 @@ eshell/
 /quelpa/
 /.lsp-session-v1
 /straight/
+/env-cache.el
