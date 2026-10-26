@@ -913,27 +913,6 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
          ("\\.sats\\'" . ats-mode)
          ("\\.pats\\'" . ats-mode)))
 
-;; JVM Stuff
-
-(use-package kotlin-mode :defer t)
-
-(use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)\\'")
-
-(use-package sbt-mode
-  :commands sbt-start sbt-command
-  :config
-  ;; sbt takes a space as input rather than as a completion request.
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-  ;; The supershell redraws over Emacs' own output.
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
-
-
-(use-package gradle-mode :defer t)
-
 ;; Build Tools
 
 (use-package dockerfile-mode :defer t)
