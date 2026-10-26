@@ -1,49 +1,106 @@
 * .emacs.d
 
-This is my .emacs.d config.
+My Emacs configuration. Emacs 30 on macOS, run as a terminal daemon under
+launchd (=brew services start emacs=) and attached with =emacsclient -t=.
 
-** use-package
+** Layout
 
-Is used throughout the init.el file. Custom lisps are housed in [[file:lisps/][lisps]].
+| path          | purpose                                            |
+|---------------+----------------------------------------------------|
+| early-init.el | GC threshold and frame setup, before packages load |
+| init.el       | everything else                                    |
+| lisps/        | packages on no archive, currently just ats-mode    |
+| custom.el     | customize output, untracked                        |
+| env-cache.el  | cached shell environment, generated, untracked     |
+
+Packages come from MELPA through =package.el= and are configured with
+=use-package= throughout. UI packages load at startup. Language and tool
+modes defer until a matching file is opened.
+
+** Requirements
+
+| what        | needed for                            |
+|-------------+---------------------------------------|
+| Emacs 30+   |                                       |
+| rg          | deadgrep                              |
+| direnv      | envrc                                 |
+| gopls       | Go LSP                                |
+| pgformatter | sqlformat                             |
+| icon fonts  | run =M-x all-the-icons-install-fonts= |
+
+** Shell environment
+
+Under launchd the daemon inherits only =/usr/bin:/bin:/usr/sbin:/sbin=, so
+the shell environment is imported once and cached in =env-cache.el=. The
+cache rebuilds itself whenever =~/.zshenv=, =~/.zprofile= or =~/.zshrc=
+changes. If a tool reaches =PATH= some other way, run =M-x env-cache-refresh=.
 
 ** Core packages
 
-| package                   | details         |
-|---------------------------+-----------------|
-| doom-themes               |                 |
-| ido-vertical-mode         |                 |
-| magit                     |                 |
-| find-file-in-project      |                 |
-| company                   |                 |
-| flycheck                  |                 |
-| expand-region             |                 |
-| deadgrep                  |                 |
-| display-line-numbers-mode | used throughout |
-| org                       |                 |
+| area       | packages                                                     |
+|------------+--------------------------------------------------------------|
+| appearance | doom-themes, doom-modeline, all-the-icons, diminish          |
+| completion | ido + flx-ido, ido-vertical, ido-completing-read+, company   |
+| navigation | smex, find-file-in-project, recentf, deadgrep                |
+| editing    | expand-region, paredit, aggressive-indent, string-inflection |
+| git        | magit, git-gutter                                            |
+| checking   | flycheck, flyover                                            |
+| lsp        | lsp-mode, lsp-ui, yasnippet                                  |
+| env        | envrc, exec-path-from-shell                                  |
+| runtime    | gcmh                                                         |
 
+=display-line-numbers-mode= and =rainbow-delimiters= are on =prog-mode-hook=.
+=aggressive-indent= is lisp only, since it reindents on every change.
 
-** Core language support
+** Language support
 
-| language   | details                     |
-|------------+-----------------------------|
-| ats2       |                             |
-| bazel      |                             |
-| dhall      |                             |
-| dockerfile |                             |
-| haskell    |                             |
-| json       |                             |
-| kotlin     | gradle, groovy              |
-| lisps      | paredit, rainbow-delimiters |
-| nix        |                             |
-| protobuf   |                             |
-| python     |                             |
-| scala      |                             |
+| language   | mode            | details                            |
+|------------+-----------------+------------------------------------|
+| ats2       | ats-mode        | local copy in lisps/               |
+| bazel      | bazel           |                                    |
+| dockerfile | dockerfile-mode |                                    |
+| elisp      | built in        | paredit, aggressive-indent         |
+| go         | go-mode         | gopls, format and imports on save  |
+| graphql    | graphql-mode    | .graphql and .graphqls             |
+| haskell    | haskell-mode    |                                    |
+| json       | json-mode       |                                    |
+| markdown   | markdown-mode   | pulled in as a dependency          |
+| nix        | nix-mode        |                                    |
+| protobuf   | protobuf-mode   | "pb style" registered, not default |
+| rust       | rust-mode       | no LSP hook, start with =M-x lsp=  |
+| sql        | sql-mode        | sqlformat via pgformatter          |
+| terraform  | terraform-mode  |                                    |
+| typescript | typescript-mode |                                    |
+| yaml       | yaml-mode       |                                    |
 
-** Pending language support
+Go is the only language wired to LSP automatically.
 
-| language | details |
-|----------+---------|
-| golang   |         |
-| java     |         |
-| markdown |         |
-| rust     |         |
+** Keys worth knowing
+
+Standard bindings are left alone unless listed here.
+
+| key     | command                                        |
+|---------+------------------------------------------------|
+| C-x m   | magit-status                                   |
+| C-x o   | find-file-in-project                           |
+| C-x f   | recent files                                   |
+| C-x g l | goto-line                                      |
+| C-x -   | toggle a two-window split between rows/columns |
+| C-x C-j | dired-jump                                     |
+| C-x C-r | rename the current file and buffer             |
+| C-x C-c | delete-frame, not quit                         |
+| C-x r q | actually quit                                  |
+| M-x     | smex                                           |
+| M-h     | kill region, or the word before point          |
+| C-c n   | expand-region                                  |
+| C-c N   | untabify, strip whitespace, reindent buffer    |
+| C-c i   | indent-region                                  |
+| C-c e   | company-complete                               |
+| C-c E   | hippie-expand, case sensitive                  |
+| C-c G   | deadgrep                                       |
+| C-c b   | new scratch buffer                             |
+| C-c c   | comment or uncomment region                    |
+| C-c +   | increment the number at point                  |
+
+=C-h= is backspace, so help moves to =C-H=. =C-i= is left alone, because in a
+terminal it is =TAB=.

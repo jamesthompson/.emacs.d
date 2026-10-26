@@ -865,7 +865,7 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
   :pin melpa-stable
   :ensure t
   :commands (lsp lsp-deferred)
-  :hook ((dhall-mode . lsp) (go-mode . lsp-deferred))
+  :hook (go-mode . lsp-deferred)
   :init
   ;; gopls sends large JSON payloads, and the 64KB default splits each one
   ;; across many more reads.  lsp-log-io stays off; it is costly.
