@@ -1,26 +1,30 @@
-;; init.el -- Single emacs configuration -*- lexical-binding: t; -*-
+;;; init.el --- Personal Emacs configuration -*- lexical-binding: t; -*-
 
-;; Early sane defaults
+;;; Commentary:
 
-;; Startup GC settings live in early-init.el; gcmh takes over at the end
-;; of this file.
+;; Loaded after early-init.el, which sets the startup GC threshold and stops
+;; package.el activating everything before this file runs.  gcmh takes over
+;; garbage collection at the end of this file.
 
-;; Recursion limit
+;;; Code:
+
+;; Deep recursion in elisp (notably aggressive-indent and lsp) overruns the
+;; 1600 default.
 (setq max-lisp-eval-depth 2000)
 
-;; Must be absolute. A relative name resolves against whatever directory
-;; Emacs started in, which found Emacs' own custom.el library instead.
+;; Absolute, so that customize writes here rather than to whatever directory
+;; Emacs happened to start in.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
-;; Set path to dependencies
+;; lisps/ holds packages that are not on any archive.  Loose .el files are
+;; found directly; any subdirectory is added to the load path as well.  The
+;; \w+ match skips "." and "..", which contain no word characters.
 (setq lisps-dir
       (expand-file-name "lisps" user-emacs-directory))
 
-;; Set up load path
 (add-to-list 'load-path lisps-dir)
 
-;; Add external projects to load path
 (dolist (project (directory-files lisps-dir t "\\w+"))
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
@@ -36,7 +40,7 @@
 (package-initialize)
 
 (defmacro append-to-list (target suffix)
-  "Append suffix to target in place"
+  "Append SUFFIX to the list in TARGET, in place."
   `(setq ,target (append ,target ,suffix)))
 
 
@@ -49,9 +53,10 @@
 (eval-when-compile
   (require 'use-package))
 
-;; The deferral variable is use-package-always-defer, not use-package-defer,
-;; so the old setting never took effect. It stays nil: UI packages need to
-;; load at startup, so language and tool modes carry :defer t individually.
+;; Deferral is per package rather than global (the global switch is
+;; `use-package-always-defer').  The UI packages have to load at startup to
+;; take effect, so language and tool modes carry :defer t individually.
+;; use-package-verbose logs per-package load times to *Messages*.
 (setq use-package-always-ensure t
       use-package-verbose t)
 
@@ -68,27 +73,31 @@
   (load-theme 'doom-tomorrow-night :no-confirm)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config)
+  ;; Each face needs its own (FACE SPEC) argument.
   (custom-theme-set-faces
    'doom-tomorrow-night
-   '(font-lock-doc-face ((t (:foreground "#D8D2C1")))                            ;; Lighten docstrings
-                        magit-diff-added ((,class (:foreground "#D1FA71")))      ;; Proper green for diff deletions
-                        magit-diff-removed ((,class (:foreground "#FAB1AB")))))) ;; Proper red for diff deletions
+   '(font-lock-doc-face ((t (:foreground "#D8D2C1"))))    ;; Lighten docstrings
+   '(magit-diff-added ((t (:foreground "#D1FA71"))))      ;; Green for diff additions
+   '(magit-diff-removed ((t (:foreground "#FAB1AB")))))) ;; Red for diff removals
 
 ;; Mac-specific defaults
 
+;; The modifier settings only bite on a GUI (ns) build; this one is
+;; terminal-only, so hyper in particular is unreachable there.
 (setq is-mac (equal system-type 'darwin)
       mac-option-modifier 'super
-      mac-command-modifier 'meta  ;; Change command to meta
-      ns-function-modifier 'hyper
-      delete-by-moving-to-trash t ;; Move to trash when deleting stuff
+      mac-command-modifier 'meta  ;; Command acts as meta
+      ns-function-modifier 'hyper ;; fn acts as hyper
+      delete-by-moving-to-trash t
       trash-directory "~/.Trash/emacs"
-      ns-pop-up-frames nil)       ;; Don't open files from the workspace in a new frame
+      ns-pop-up-frames nil)       ;; Open files in this frame, not a new one
 
-;; This daemon starts from launchd, whose PATH is only /usr/bin:/bin:/usr/sbin:/sbin,
-;; so the shell environment has to be imported or gopls, cargo and kubectl go
-;; missing. The import needs an interactive zsh (the PATH exports live in
-;; .zshrc) and that costs about a second, so the result is cached and only
-;; recomputed when a shell init file changes. M-x env-cache-refresh forces it.
+;; Under launchd the daemon inherits PATH=/usr/bin:/bin:/usr/sbin:/sbin, so the
+;; shell environment has to be imported or gopls, cargo and kubectl are not
+;; found.  The import needs an interactive zsh, because the PATH exports live
+;; in .zshrc, and that costs about a second.  The result is therefore cached
+;; and only recomputed when a shell init file changes.
+;; Run M-x env-cache-refresh after adding a tool to PATH.
 (use-package exec-path-from-shell
   :ensure t
   :defer t)
@@ -151,15 +160,17 @@
                                         (concat user-emacs-directory "backups"))))
       inhibit-startup-message t                                ;; Never want to see startup message
       initial-scratch-message ";; Scratch"                     ;; Scratch header
-      global-auto-revert-non-file-buffers t                    ;; Also auto refresh dired, but be quiet about it
-      auto-revert-verbose nil
+      global-auto-revert-non-file-buffers t                    ;; Auto refresh dired too
+      auto-revert-verbose nil                                  ;; ...without announcing each revert
+      ;; FIXME: expands to ~/.emacs.d//Users/<login>, which does not exist.
+      ;; It is added to load-path below and loads nothing.
       user-settings-dir (concat user-emacs-directory
-                                "/Users/" user-login-name)     ;; Set user settings directory
-      vc-make-backup-files nil                                 ;; Git already holds these; writing them again costs a disk write per save
-      select-enable-clipboard t                                ;; Allow pasting selection outside of Emacs
+                                "/Users/" user-login-name)
+      vc-make-backup-files nil                                 ;; Version control already holds these
+      select-enable-clipboard t                                ;; Share the kill ring with the system clipboard
       visible-bell t
       color-theme-is-global t
-      truncate-partial-width-windows nil
+      truncate-partial-width-windows nil                       ;; Let split windows wrap like full-width ones
       shift-select-mode nil                                    ;; Do not use shift to mark things
       delete-by-moving-to-trash t                              ;; Move files to trash when deleting
       echo-keystrokes 0.1                                      ;; Echo keystrokes fast
@@ -167,25 +178,42 @@
       fill-column 80
       history-length 1000
       enable-recursive-minibuffers t                           ;; Allow recursive minibuffers
-      org-replace-disputed-keys t                              ;; org-mode: Don't prevent S-arrow to switch windows (use M-+ and M-- instead to toggle)
-      eval-expression-print-level nil                          ;; Always see what's happening
+      ;; Frees S-<arrow> for window movement; org moves those bindings to
+      ;; M-p, M-n, M-- and M-+.  Must be set before org loads.
+      org-replace-disputed-keys t
+      eval-expression-print-level nil                          ;; Print eval results in full, no depth elision
       whitespace-style '(trailing lines space-before-tab
-                                  indentation space-after-tab) ;; Whitespace-style
+                                  indentation space-after-tab)
       whitespace-line-column 80
-      dired-dwim-target t                                      ;; Move files between the open split windows
-      inhibit-compacting-font-caches t)                        ;; Fix for all-the-icons slow rendering
+      dired-dwim-target t                                      ;; Default copy/move target is the other dired window
+      inhibit-compacting-font-caches t)                        ;; Keeps all-the-icons rendering fast (GUI only)
 
 (add-to-list 'load-path user-settings-dir)
 
+(defun current-buffer-matches-file-p ()
+  "Return non-nil if the buffer text is identical to its file on disk.
+Widens first, so a narrowed buffer is still compared in full."
+  (let ((file buffer-file-name))
+    (and file
+         (file-readable-p file)
+         (string= (save-restriction
+                    (widen)
+                    (buffer-substring-no-properties (point-min) (point-max)))
+                  (with-temp-buffer
+                    (insert-file-contents file)
+                    (buffer-substring-no-properties (point-min) (point-max)))))))
+
 (defun maybe-unset-buffer-modified (&optional _)
-  "Clear modified bit on all unmodified buffers."
+  "Clear the modified flag on buffers whose text still matches their file.
+Stops Emacs prompting to save buffers that were only touched, not changed.
+Reads each modified buffer's file, so keep it off any per-keystroke hook."
   (interactive)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (and buffer-file-name (buffer-modified-p) (current-buffer-matches-file-p))
         (set-buffer-modified-p nil)))))
 
-;; Don't prompt to save unmodified buffers on exit.
+;; Don't prompt to save buffers that are unchanged on disk.
 (advice-add 'save-buffers-kill-emacs :before #'maybe-unset-buffer-modified)
 
 (if (fboundp 'menu-bar-mode)
@@ -200,27 +228,32 @@
 ;; Answering just 'y' or 'n' is superior to typing three letters
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(set-terminal-coding-system 'utf-8)                      ;; UTF-8 everywhere by default
-(set-keyboard-coding-system 'utf-8)                      ;; UTF-8 everywhere by default
-(set-selection-coding-system 'utf-8)                     ;; UTF-8 everywhere by default
-(prefer-coding-system 'utf-8)                            ;; UTF-8 everywhere by default
-(global-hl-line-mode 1)                                  ;; Highlight current line
-(add-hook 'before-save-hook 'delete-trailing-whitespace) ;; Always delete trailing whitespace upon saving
-(global-auto-revert-mode 1)                              ;; Auto refresh buffers
-(transient-mark-mode 1)                                  ;; Show active region
+;; UTF-8 everywhere
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+(global-hl-line-mode 1)                                  ;; Highlight the current line
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(global-auto-revert-mode 1)                              ;; Reload buffers when the file changes on disk
+(delete-selection-mode 1)                                ;; Typing replaces the active region
+(auto-compression-mode t)                                ;; Open .gz and friends transparently
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(savehist-mode 1)                                        ;; Persist minibuffer history across restarts
+(set-default 'indent-tabs-mode nil)                      ;; Indent with spaces
+(set-default 'indicate-empty-lines t)                    ;; Mark lines past the end of the buffer
+(global-subword-mode 1)                                  ;; Treat camelCase humps as words
+(show-paren-mode 1)                                      ;; Highlight the paren matching the one at point
+
+;; Buffer-local so a region in one buffer does not deactivate on switching,
+;; and permanent-local so it survives a major mode change.
+(transient-mark-mode 1)
 (make-variable-buffer-local 'transient-mark-mode)
 (put 'transient-mark-mode 'permanent-local t)
-(delete-selection-mode 1)                                ;; Remove text in active region if inserting text
-(auto-compression-mode t)                                ;; Transparently open compressed files
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)   ;; display line numbers in any prog-mode buffer
-(savehist-mode 1)                                        ;; Save minibuffer history
-(set-default 'indent-tabs-mode nil)                      ;; Never insert tabs
-(set-default 'indicate-empty-lines t)                    ;; Don't show me empty lines after buffer end
-(global-subword-mode 1)                                  ;; Easily navigate sillycased words
-(show-paren-mode 1)                                      ;; Always highlight matching paren when point is above one
 
 (setq-default transient-mark-mode t
-              truncate-lines t) ;; By default truncate lines
+              truncate-lines t)                          ;; Truncate rather than wrap long lines
 
 ;; Create parent directories if they do not exist
 ;; http://iqbalansari.github.io/blog/2014/12/07/automatically-create-parent-directories-on-visiting-a-new-file-in-emacs/
@@ -255,7 +288,7 @@
   (end-of-buffer)
   (dired-next-line -1))
 
-;; Reload dired after making changes
+;; Revert dired automatically after any command that changes the directory.
 (--each '(dired-do-rename
           dired-do-copy
           dired-create-directory
@@ -279,10 +312,23 @@
      (define-key wdired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
      (define-key wdired-mode-map (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)))
 
-;; Use normal tabs in makefiles
-(add-hook 'makefile-mode-hook 'indent-tabs-mode)
+;; Makefiles need real tabs.  Call the mode with an argument: bare
+;; `indent-tabs-mode' as a hook function toggles, so it would turn tabs back
+;; off wherever they are already on.
+(add-hook 'makefile-mode-hook (lambda () (indent-tabs-mode 1)))
 
-;; Set clear buffer for shell
+(defun clear-shell ()
+  "Delete all output in the current comint buffer except the last prompt.
+Falls back to erasing the buffer once the process has exited, since
+`comint-truncate-buffer' needs a live process to locate the prompt."
+  (interactive)
+  (require 'comint)
+  (if (get-buffer-process (current-buffer))
+      (let ((comint-buffer-maximum-size 0))
+        (comint-truncate-buffer))
+    (let ((inhibit-read-only t))
+      (erase-buffer))))
+
 (add-hook 'shell-mode-hook
           (lambda ()
             (local-set-key (kbd "M-k") 'clear-shell)))
@@ -294,7 +340,6 @@
 
 ;; Global key bindings
 
-;; Perform general cleanup.
 (defun untabify-buffer ()
   (interactive)
   (untabify (point-min) (point-max)))
@@ -304,14 +349,14 @@
   (indent-region (point-min) (point-max)))
 
 (defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-   Including indent-buffer, which should not be called automatically on save."
+  "Untabify, strip trailing whitespace and reindent the whole buffer.
+Reindentation is why this is not on `before-save-hook'."
   (interactive)
   (untabify-buffer)
   (delete-trailing-whitespace)
   (indent-buffer))
 
-;; Window switching (between horizontal / vertical)
+;; Flip a two-window split between side by side and stacked.
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -337,7 +382,11 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-;; Like isearch, but adds region (if any) to history and deactivates mark
+(defun region-as-string ()
+  "Return the text of the active region."
+  (buffer-substring-no-properties (region-beginning) (region-end)))
+
+;; Like isearch, but seeds the search ring with the active region first.
 (defun isearch-forward-use-region ()
   (interactive)
   (when (region-active-p)
@@ -354,8 +403,9 @@
   (call-interactively 'isearch-backward))
 
 ;; Create scratch buffer
-(defun create-scratch-buffer nil
-  "create a new scratch buffer to work in. (could be *scratch* - *scratchX*)"
+(defun create-scratch-buffer ()
+  "Switch to a new scratch buffer in `emacs-lisp-mode'.
+Names it *scratch*, or *scratch1*, *scratch2* and so on if taken."
   (interactive)
   (let ((n 0)
         bufname)
@@ -369,7 +419,14 @@
     (emacs-lisp-mode)
     ))
 
-;; Buffer file functions
+(defun kill-region-or-backward-word ()
+  "Kill the active region, or the word before point when there is none."
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word 1)))
+
+;; Force a save even when the buffer is unmodified, to bump the file mtime.
 (defun touch-buffer-file ()
   (interactive)
   (insert " ")
@@ -377,7 +434,7 @@
   (save-buffer))
 
 (defun rename-current-buffer-file ()
-  "Renames current buffer and file it is visiting."
+  "Rename the current buffer and the file it is visiting."
   (interactive)
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
@@ -393,9 +450,11 @@
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
 
+;; Make C-h act as backspace, shell style.  help-command moves to C-H below.
 (define-key key-translation-map [?\C-h] [?\C-?])
 
-;; toggle two most recent buffers
+;; Keyboard macro: C-x b RET, which accepts the default and so toggles to the
+;; previous buffer.  Not bound to a key.
 (fset 'quick-switch-buffer [?\C-x ?b return])
 
 ;; Shift+direction
@@ -413,7 +472,7 @@
 (global-set-key (kbd "C-r") 'isearch-backward-use-region)
 (global-set-key (kbd "C-S-s") 'isearch-forward)              ;; Like isearch-*-use-region, but doesn't screw with the active region
 (global-set-key (kbd "C-S-r") 'isearch-backward)
-(global-set-key (kbd "H-*") 'beginning-of-buffer)            ;; Rapid buffer top / bottom navigation
+(global-set-key (kbd "H-*") 'beginning-of-buffer)            ;; Hyper, so GUI builds only
 (global-set-key (kbd "H-n") 'end-of-buffer)
 (global-set-key (kbd "M-&") 'query-replace-regexp)           ;; Query replace regex key binding
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)  ;; Comment/uncomment block
@@ -437,15 +496,17 @@
 
 ;; Find file in project (ffip)
 
+;; Loaded eagerly on purpose: `ffip-project-files' below redefines a function
+;; from this package, so the package has to be in place first or the override
+;; is undone when it loads later.
 (use-package find-file-in-project)
 
-;; No need to be stingy
 (setq ffip-limit 4096)
 
-;; Use full project path for ffip
-
 (defun ffip-project-files ()
-  "Return an alist of all filenames in the project and their path."
+  "Return an alist mapping project-relative file names to absolute paths.
+Overrides the ffip function of the same name so candidates show the path
+from the project root rather than the bare file name."
   (let ((file-alist nil))
     (mapcar (lambda (file)
               (let ((file-cons (cons (s-chop-prefix (file-truename (ffip-project-root)) (expand-file-name file))
@@ -476,13 +537,14 @@
   "An exhaustive list of file name patterns to look for."
   (set (make-local-variable 'ffip-patterns) patterns))
 
-;; Function to create new functions that look for a specific pattern
+;; Build a command that searches only the given file name PATTERNS.
+;; This file is lexically bound, so a plain `let' closes over patterns;
+;; `lexical-let' is from cl and is not available here.
 (defun ffip-create-pattern-file-finder (&rest patterns)
-  (lexical-let ((patterns patterns))
-               (lambda ()
-                 (interactive)
-                 (let ((ffip-patterns patterns))
-                   (find-file-in-project)))))
+  (lambda ()
+    (interactive)
+    (let ((ffip-patterns patterns))
+      (find-file-in-project))))
 
 ;; Default excludes - override with ffip-local-excludes
 
@@ -503,9 +565,12 @@
                  "/.stack-work")))
 
 (global-set-key (kbd "C-x o") 'find-file-in-project)
+
+;; Making C-x g a prefix also keeps magit from claiming C-x g globally, which
+;; its autoloads do on `after-init-hook' when the key is still free.
 (global-set-key (kbd "C-x g l") 'goto-line)
 
-;; Finding files
+;; s.el, for the string helpers used just below
 (use-package s)
 
 (defvar user-home-directory (concat (expand-file-name "~") "/"))
@@ -514,6 +579,7 @@
   (s-chop-prefix user-home-directory file-name))
 
 (defun recentf--file-cons (file-name)
+  "Pair the display name of FILE-NAME with its full path."
   (cons (shorter-file-name file-name) file-name))
 
 ;; recentf
@@ -524,7 +590,8 @@
   (add-to-list 'recentf-exclude ".+tmp......\\.org"))
 
 (defun recentf-ido-find-file ()
-  "Find a recent file using ido."
+  "Open a recent file, shown relative to home.
+Routed through ido by `ido-ubiquitous-mode', set up further down."
   (interactive)
   (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
          (files (mapcar 'car recent-files))
@@ -553,12 +620,17 @@
 (global-set-key (kbd "C-c -") 'decrement-number-at-point)
 
 
-;; Indent region (n.b. C-x TAB <left> <right> for interative indentation)
-;; Not C-i: in a terminal C-i *is* TAB, so binding it removes TAB everywhere,
-;; including indentation, completion-at-point and org cycling.
+;; Not on C-i: in a terminal C-i is TAB, and binding it there would remove TAB
+;; everywhere, including indentation, completion-at-point and org cycling.
+;; C-x TAB <left> <right> still does interactive rigid indentation.
 (global-set-key (kbd "C-c i") 'indent-region)
 
-;; Automagic word completion
+(defun hippie-expand-no-case-fold ()
+  "Expand the word before point with `hippie-expand', matching case exactly."
+  (interactive)
+  (let ((case-fold-search nil))
+    (hippie-expand nil)))
+
 (global-set-key (kbd "C-c E") 'hippie-expand-no-case-fold)
 
 ;; Package loading / setup
@@ -567,6 +639,8 @@
 (use-package diminish
   :ensure t)
 
+;; Hide these from the modeline.  Some name modes from packages that are not
+;; installed; diminish tolerates that.
 (diminish 'eldoc-mode)
 (diminish 'paredit-mode)
 (diminish 'elisp-slime-nav)
@@ -575,15 +649,14 @@
 (diminish 'whitespace-cleanup-mode)
 (diminish 'subword-mode)
 
-;; Scoped to lisp rather than global: it reindents the enclosing block on
-;; every change, which is expensive in large Go, TS and JSON buffers.
+;; Lisp only.  It reindents the enclosing block on every change, which is
+;; expensive in large Go, TS and JSON buffers.
 (use-package aggressive-indent
   :hook ((emacs-lisp-mode lisp-mode scheme-mode) . aggressive-indent-mode)
   :diminish)
 
 (use-package doom-modeline
   :ensure t
-  :init
   :hook (after-init . doom-modeline-mode)
   :config
   (doom-modeline-def-modeline 'plain-modeline
@@ -591,10 +664,11 @@
     '(misc-info minor-modes input-method buffer-encoding process))
   (setq doom-modeline-height 32
         doom-modeline-bar-width 6
-        doom-modeline-minor-modes nil     ;; rendering the full list costs a redisplay pass
+        doom-modeline-minor-modes nil     ;; Listing every minor mode costs a redisplay pass
         doom-modeline-buffer-file-name-style 'truncate-upto-project
         doom-modeline-vcs-max-length 32
         doom-modeline-indent-info t)
+  ;; nil on a terminal build, so icons stay off there.
   (when window-system
     (setq doom-modeline-icon t
           doom-modeline-major-mode-icon t
@@ -614,6 +688,7 @@
 (use-package ido-completing-read+
   :init (ido-ubiquitous-mode 1))
 
+;; FIXME: never added to `ido-setup-hook', so these bindings are not active.
 (defun sd/ido-define-keys ()
   (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
   (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
@@ -634,10 +709,7 @@
 (use-package expand-region
   :bind (("C-c n" . er/expand-region)))
 
-;; Deadgrep (ripgrep (rg) within emacs)
-;; spinner arrives as a dependency. The old declarations pointed :load-path at
-;; a directory that does not exist and :ensure at the unrelated package `f',
-;; leaving uncompiled lisps/spinner.el shadowing the elpa build.
+;; Deadgrep (ripgrep within Emacs; needs rg on PATH)
 (use-package deadgrep
   :bind (("C-c G" . deadgrep)))
 
@@ -671,30 +743,24 @@
   :commands (flycheck-mode
              flycheck-next-error
              flycheck-previous-error)
-  :init
   :config
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point)
 
   (defun adjust-flycheck-automatic-syntax-eagerness ()
-    "Adjusts how often error checking runs based on error quantity.
-     i.e. Fixes errors as quickly as possible, but in a
-     clean buffer error checking is much less frequent."
+    "Recheck quickly while errors are present, slowly once the buffer is clean."
     (setq flycheck-idle-change-delay
           (if flycheck-current-errors 0.5 30.0)))
 
+  ;; Replaces the upstream function to drop its deferred check, which held
+  ;; errors back until the next command instead of showing them on the timer.
+  ;; Revisit this after a flycheck upgrade: it is an internal function.
   (defun flycheck-handle-idle-change ()
-    "Handle an expired idle time since the last change.
-     Overwritten version of the original flycheck-handle-idle-change,
-     which removes the forced deferred.
-     Timers should only trigger inbetween commands in a single
-     threaded system and the forced deferred makes errors never show
-     up before you execute another command."
+    "Run a syntax check when the idle timer since the last change expires."
     (flycheck-clear-idle-change-timer)
     (flycheck-buffer-automatically 'idle-change))
 
-  ;; Each buffer gets its own idle-change-delay because of the
-  ;; buffer-sensitive adjustment above.
+  ;; Per buffer, because the delay above is adjusted per buffer.
   (make-variable-buffer-local 'flycheck-idle-change-delay)
 
   (add-hook 'flycheck-after-syntax-check-hook
@@ -712,8 +778,8 @@
 ;; Company
 
 (use-package company
-  ;; :demand because :bind would otherwise defer the package and
-  ;; global-company-mode below would not run until C-c e was pressed.
+  ;; :demand overrides the deferral that :bind implies, so global-company-mode
+  ;; below runs at startup rather than on the first C-c e.
   :demand t
   :bind (("C-c e" . company-complete))
   :diminish company-mode
@@ -724,11 +790,11 @@
   (company-abort-manual-when-too-short t)
   :config
   (global-company-mode)
-  ;; A 0 delay with a 1-character prefix queries the backend on every
-  ;; keystroke from the first character, which is a lot of LSP round-trips.
+  ;; Keep these off zero and one: that combination queries the backend on
+  ;; every keystroke from the first character, which floods LSP.
   (setq company-idle-delay 0.15
         company-minimum-prefix-length 2)
-  ;; use numbers 0-9 to select company completion candidates
+  ;; Pick a candidate by its number, 0 to 9
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
                         `(lambda () (interactive) (company-complete-number ,x))))
@@ -737,7 +803,7 @@
 ;; Haskell
 
 (use-package haskell-mode
-  :mode ("\\.hs$" . haskell-mode)
+  :mode ("\\.hs\\'" . haskell-mode)
   :config
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
@@ -747,6 +813,7 @@
   :ensure t
   :defer t
   :config
+  ;; Registered but not selected; set c-default-style to use it.
   (c-add-style "pb style"
                '((c-basic-offset . 2)
                  (indent-tabs-mode . nil))))
@@ -760,13 +827,15 @@
 
 ;; GraphQL
 
-(use-package graphql-mode :defer t)
-(add-to-list 'auto-mode-alist '("\\.graphqls\\'" . graphql-mode))
+;; The package autoloads .graphql; .graphqls needs adding.
+(use-package graphql-mode
+  :defer t
+  :mode ("\\.graphqls\\'" . graphql-mode))
 
 ;; Nix / Environments
 
-;; envrc only. Running direnv-mode alongside it meant two direnv integrations
-;; shelling out over the same environment on every buffer switch.
+;; envrc, not direnv.el: it keeps the environment buffer-local, so buffers
+;; from different projects do not overwrite each other's environment.
 (use-package envrc
   :config
   (envrc-global-mode))
@@ -782,15 +851,14 @@
 
 ;; Golang stuff
 
-;; No company-go: it drives gocode, which is not installed, and setting
-;; company-backends locally cut out company-capf, which is how lsp-mode
-;; serves completions.
+;; Completion comes from lsp-mode through company-capf, so nothing here should
+;; set company-backends: replacing that list locally would cut gopls out.
 (use-package go-mode
   :mode "\\.go\\'"
   :init
   (add-hook 'go-mode-hook
             (lambda ()
-              (setq indent-tabs-mode 1)
+              (setq indent-tabs-mode t)   ;; gofmt wants tabs
               (setq tab-width 2))))
 
 (use-package lsp-mode
@@ -799,8 +867,8 @@
   :commands (lsp lsp-deferred)
   :hook ((dhall-mode . lsp) (go-mode . lsp-deferred))
   :init
-  ;; gopls sends large JSON payloads; the 64KB default means many more read
-  ;; cycles per response.
+  ;; gopls sends large JSON payloads, and the 64KB default splits each one
+  ;; across many more reads.  lsp-log-io stays off; it is costly.
   (setq read-process-output-max (* 1024 1024)
         lsp-idle-delay 0.5
         lsp-log-io nil))
@@ -808,15 +876,15 @@
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.dist\\'"))
 
-;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
+;; Format and fix imports on save, via gopls.  Do not add gofmt or goimports
+;; hooks as well, or the buffer gets formatted twice.
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-;; Optional - provides fancier overlays.
+;; Sideline and peek overlays for lsp-mode, enabled per buffer.
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
@@ -828,39 +896,40 @@
   :hook (go-mode . yas-minor-mode))
 
 ;; Typescript / TSX - Frontend Stuff
-;; (dash-functional was merged into dash and is now an empty stub)
 
 (use-package typescript-mode :defer t)
 
 ;; ATS2
 
+;; Local copy in lisps/, which is already on the load path.  It carries no
+;; autoload cookies, so :commands is what defines ats-mode for the file
+;; associations below.
 (use-package ats-mode
-  :ensure nil       ;; local copy; lisps/ is already on load-path
-  ;; :commands rather than :defer, because this file carries no autoload
-  ;; cookies, so nothing would define ats-mode when a .dats file is opened.
+  :ensure nil
   :commands (ats-mode)
-  :init
-  (add-to-list 'auto-mode-alist '("\\.hats$" . ats-mode))
-  (add-to-list 'auto-mode-alist '("\\.cats$" . ats-mode))
-  (add-to-list 'auto-mode-alist '("\\.dats$" . ats-mode))
-  (add-to-list 'auto-mode-alist '("\\.sats$" . ats-mode))
-  (add-to-list 'auto-mode-alist '("\\.pats$" . ats-mode)))
+  :mode (("\\.hats\\'" . ats-mode)
+         ("\\.cats\\'" . ats-mode)
+         ("\\.dats\\'" . ats-mode)
+         ("\\.sats\\'" . ats-mode)
+         ("\\.pats\\'" . ats-mode)))
 
 ;; JVM Stuff
 
 (use-package kotlin-mode :defer t)
 
 (use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$")
+  :mode "\\.s\\(cala\\|bt\\)\\'")
 
 (use-package sbt-mode
   :commands sbt-start sbt-command
   :config
+  ;; sbt takes a space as input rather than as a completion request.
   (substitute-key-definition
    'minibuffer-complete-word
    'self-insert-command
    minibuffer-local-completion-map)
-   (setq sbt:program-options '("-Dsbt.supershell=false")))
+  ;; The supershell redraws over Emacs' own output.
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 
 (use-package gradle-mode :defer t)
@@ -878,19 +947,18 @@
 
 (use-package string-inflection :defer t)
 
-;; Postgres-Style SQL Formatting
-;; n.b. Requires pgformmater (see: nixpkgs.pgformatter)
+;; Postgres-style SQL formatting via M-x sqlformat.
+;; Needs the pgformatter binary on PATH (nixpkgs.pgformatter).
 (use-package sqlformat
-  :mode ("\\.sql$" . sql-mode)
+  :mode ("\\.sql\\'" . sql-mode)
   :config
-  (setq sqlformat-command `pgformatter))
+  (setq sqlformat-command 'pgformatter))
 
 ;; Garbage collection.
-;; A fixed 16MB threshold on a daemon that stays up for weeks produced tens of
-;; thousands of collections mid-edit. gcmh holds the threshold high while you
-;; work and collects once Emacs goes idle, so the pauses land between
-;; keystrokes rather than during them. It also covers the minibuffer case the
-;; old defer/restore hooks handled.
+;; This config runs as a long-lived daemon, where a fixed threshold means
+;; thousands of collections in the middle of editing.  gcmh keeps the
+;; threshold high while you work and collects once Emacs goes idle, so pauses
+;; land between keystrokes rather than during them.
 (use-package gcmh
   :ensure t
   :diminish
@@ -901,9 +969,11 @@
   :config
   (gcmh-mode 1))
 
-(provide 'init)
-
-;;; init.el ends here
+;; Stop Emacs asking for confirmation on these.
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
+
+(provide 'init)
+
+;;; init.el ends here
