@@ -61,12 +61,8 @@
       use-package-verbose t)
 
 ;; Theme(s) & font(s) stuff
-;; You will need to run all-the-icons-install-fonts
 
 (set-face-attribute 'default nil :height 140)
-
-(use-package all-the-icons
-  :ensure t)
 
 (use-package doom-themes
   :config
@@ -182,7 +178,7 @@
                                   indentation space-after-tab)
       whitespace-line-column 80
       dired-dwim-target t                                      ;; Default copy/move target is the other dired window
-      inhibit-compacting-font-caches t)                        ;; Keeps all-the-icons rendering fast (GUI only)
+      inhibit-compacting-font-caches t)                        ;; Keeps icon font rendering fast (GUI only)
 
 (defun current-buffer-matches-file-p ()
   "Return non-nil if the buffer text is identical to its file on disk.
@@ -270,8 +266,6 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 (add-to-list 'ido-ignore-directories "target")
 (add-to-list 'ido-ignore-files "\\.DS_Store")
 
-(use-package dash)
-
 ;;dired
 
 ;; C-a is nicer in dired if it moves back to start of files
@@ -292,12 +286,16 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
   (dired-next-line -1))
 
 ;; Revert dired automatically after any command that changes the directory.
-(--each '(dired-do-rename
-          dired-do-copy
-          dired-create-directory
-          wdired-abort-changes)
-  (eval `(defadvice ,it (after revert-buffer activate)
-           (revert-buffer))))
+;; Named rather than a lambda, so the advice can be removed again.
+(defun dired-revert-after-change (&rest _)
+  "Refresh the listing after a command that changed the directory."
+  (revert-buffer))
+
+(dolist (cmd '(dired-do-rename
+               dired-do-copy
+               dired-create-directory
+               wdired-abort-changes))
+  (advice-add cmd :after #'dired-revert-after-change))
 
 (eval-after-load "dired"
   '(progn
