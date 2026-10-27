@@ -12,6 +12,7 @@ launchd (=brew services start emacs=) and attached with =emacsclient -t=.
 | lisps/        | packages on no archive, currently just ats-mode    |
 | custom.el     | customize output, untracked                        |
 | env-cache.el  | cached shell environment, generated, untracked     |
+| tree-sitter/  | compiled grammars, generated, untracked            |
 
 Packages come from MELPA through =package.el= and are configured with
 =use-package= throughout. UI packages load at startup. Language and tool
@@ -19,14 +20,14 @@ modes defer until a matching file is opened.
 
 ** Requirements
 
-| what        | needed for                            |
-|-------------+---------------------------------------|
-| Emacs 30+   |                                       |
-| rg          | deadgrep                              |
-| direnv      | envrc                                 |
-| gopls       | Go LSP                                |
-| pgformatter | sqlformat                             |
-| icon fonts  | run =M-x all-the-icons-install-fonts= |
+| what        | needed for                             |
+|-------------+----------------------------------------|
+| Emacs 30+   | tree-sitter, and the built-in ts modes |
+| git and cc  | building tree-sitter grammars          |
+| rg          | deadgrep                               |
+| direnv      | envrc                                  |
+| gopls       | Go LSP                                 |
+| pgformatter | sqlformat                              |
 
 ** Shell environment
 
@@ -35,11 +36,29 @@ the shell environment is imported once and cached in =env-cache.el=. The
 cache rebuilds itself whenever =~/.zshenv=, =~/.zprofile= or =~/.zshrc=
 changes. If a tool reaches =PATH= some other way, run =M-x env-cache-refresh=.
 
+** Tree-sitter
+
+Six languages use the tree-sitter modes built into Emacs 30 rather than the
+regex ones. A grammar is a shared library that has to be compiled on the
+machine, and none ship with Emacs, so on a new machine run:
+
+: M-x treesit-install-grammars
+
+That builds every grammar in =treesit-language-source-alist= into
+=~/.emacs.d/tree-sitter=, skipping any already present. A prefix argument
+rebuilds those too. Currently go, gomod, json, yaml, rust, typescript, tsx
+and dockerfile.
+
+=major-mode-remap-alist= is populated only for grammars that are actually
+built. A tree-sitter mode cannot start without its grammar, so a machine that
+has not run the install falls back to =go-mode=, =json-mode= and the rest
+rather than failing to open the file.
+
 ** Core packages
 
 | area       | packages                                                     |
 |------------+--------------------------------------------------------------|
-| appearance | doom-themes, doom-modeline, all-the-icons, diminish          |
+| appearance | doom-themes, doom-modeline, diminish                         |
 | completion | ido + flx-ido, ido-vertical, ido-completing-read+, company   |
 | navigation | smex, find-file-in-project, recentf, deadgrep                |
 | editing    | expand-region, paredit, aggressive-indent, string-inflection |
@@ -50,28 +69,30 @@ changes. If a tool reaches =PATH= some other way, run =M-x env-cache-refresh=.
 | runtime    | gcmh                                                         |
 
 =display-line-numbers-mode= and =rainbow-delimiters= are on =prog-mode-hook=.
-=aggressive-indent= is lisp only, since it reindents on every change.
+=aggressive-indent= is lisp only, since it reindents on every change. In ido,
+=C-n=, =C-p= and the arrow keys step through matches rather than history.
 
 ** Language support
 
-| language   | mode            | details                            |
-|------------+-----------------+------------------------------------|
-| ats2       | ats-mode        | local copy in lisps/               |
-| bazel      | bazel           |                                    |
-| dockerfile | dockerfile-mode |                                    |
-| elisp      | built in        | paredit, aggressive-indent         |
-| go         | go-mode         | gopls, format and imports on save  |
-| graphql    | graphql-mode    | .graphql and .graphqls             |
-| haskell    | haskell-mode    |                                    |
-| json       | json-mode       |                                    |
-| markdown   | markdown-mode   | pulled in as a dependency          |
-| nix        | nix-mode        |                                    |
-| protobuf   | protobuf-mode   | "pb style" registered, not default |
-| rust       | rust-mode       | no LSP hook, start with =M-x lsp=  |
-| sql        | sql-mode        | sqlformat via pgformatter          |
-| terraform  | terraform-mode  |                                    |
-| typescript | typescript-mode |                                    |
-| yaml       | yaml-mode       |                                    |
+| language   | mode               | details                            |
+|------------+--------------------+------------------------------------|
+| ats2       | ats-mode           | local copy in lisps/               |
+| bazel      | bazel              |                                    |
+| dockerfile | dockerfile-ts-mode |                                    |
+| elisp      | built in           | paredit, aggressive-indent         |
+| go         | go-ts-mode         | gopls, format and imports on save  |
+| go.mod     | go-mod-ts-mode     |                                    |
+| graphql    | graphql-mode       | .graphql and .graphqls             |
+| haskell    | haskell-mode       |                                    |
+| json       | json-ts-mode       |                                    |
+| markdown   | markdown-mode      | pulled in as a dependency          |
+| nix        | nix-mode           |                                    |
+| protobuf   | protobuf-mode      | "pb style" registered, not default |
+| rust       | rust-ts-mode       | no LSP hook, start with =M-x lsp=  |
+| sql        | sql-mode           | sqlformat via pgformatter          |
+| terraform  | terraform-mode     |                                    |
+| typescript | typescript-ts-mode | =.tsx= uses tsx-ts-mode            |
+| yaml       | yaml-ts-mode       |                                    |
 
 Go is the only language wired to LSP automatically.
 
