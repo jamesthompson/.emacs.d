@@ -1,7 +1,8 @@
 * .emacs.d
 
-My Emacs configuration. Emacs 30 on macOS, run as a terminal daemon under
-launchd (=brew services start emacs=) and attached with =emacsclient -t=.
+My Emacs configuration. Emacs 30 on macOS, built with native compilation,
+run as a terminal daemon under launchd and attached with =emacsclient -t=.
+Setting that up from scratch is below.
 
 ** Layout
 
@@ -20,14 +21,129 @@ modes defer until a matching file is opened.
 
 ** Requirements
 
-| what        | needed for                             |
-|-------------+----------------------------------------|
-| Emacs 30+   | tree-sitter, and the built-in ts modes |
-| git and cc  | building tree-sitter grammars          |
-| rg          | deadgrep                               |
-| direnv      | envrc                                  |
-| gopls       | Go LSP                                 |
-| pgformatter | sqlformat                              |
+| what          | needed for                         |
+|---------------+------------------------------------|
+| emacs-plus@30 | Emacs 30.2 with native compilation |
+| git and cc    | building tree-sitter grammars      |
+| rg            | deadgrep                           |
+| direnv        | envrc                              |
+| gopls         | Go LSP                             |
+| pgformatter   | sqlformat                          |
+
+The tree-sitter modes themselves arrived in Emacs 29, so the config loads on
+29 as well; it is written against 30.
+
+** Setting up on macOS
+
+*** The Emacs build
+
+Homebrew core's =emacs= depends on gmp, gnutls and tree-sitter and on no
+version depends on libgccjit, so it cannot be built with native compilation.
+This config expects =emacs-plus@30=, which pins the same Emacs 30.2 by
+checksum and hardcodes =--with-native-compilation=aot=.
+
+#+begin_src sh
+brew tap d12frosted/emacs-plus
+brew trust d12frosted/emacs-plus
+brew install emacs-plus@30
+#+end_src
+
+Homebrew 7 refuses to load a formula from an untrusted tap, which is what the
+=brew trust= line is for. The install pulls gcc, libgccjit and the librsvg
+graphics stack, all bottled.
+
+If core =emacs= is already installed the link step fails, because it owns the
+shared paths under =share/emacs=. Unlink it rather than uninstalling, so
+going back is two commands:
+
+#+begin_src sh
+brew unlink emacs
+brew link emacs-plus@30
+#+end_src
+
+*** The daemon
+
+=brew services= cannot start this formula. It reports =has not implemented
+#plist, #service or provided a locatable service file=, although the formula
+does have a =service= block and =brew services info= resolves the label.
+Write the launchd job yourself, as
+=~/Library/LaunchAgents/sh.brew.emacs-plus@30.plist=:
+
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>sh.brew.emacs-plus@30</string>
+  <key>LimitLoadToSessionType</key>
+  <array>
+    <string>Aqua</string>
+    <string>Background</string>
+    <string>LoginWindow</string>
+    <string>StandardIO</string>
+    <string>System</string>
+  </array>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/opt/emacs-plus@30/bin/emacs</string>
+    <string>--fg-daemon</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/opt/homebrew/var/log/emacs-plus@30.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>/opt/homebrew/var/log/emacs-plus@30.stderr.log</string>
+</dict>
+</plist>
+#+end_src
+
+=KeepAlive= is =true= rather than the formula's =crashed: true=, so the
+daemon also comes back from a deliberate =M-x kill-emacs=. Start it with:
+
+#+begin_src sh
+mkdir -p /opt/homebrew/var/log
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/sh.brew.emacs-plus@30.plist
+#+end_src
+
+Restarting it afterwards, in place of =brew services restart emacs=:
+
+#+begin_src sh
+launchctl kickstart -k gui/$(id -u)/sh.brew.emacs-plus@30
+#+end_src
+
+Startup errors land in the =StandardErrorPath= log above.
+
+*** First run
+
+The first start downloads every package from MELPA, so give it a minute or
+two. Native compilation then runs in the background, filling
+=~/.emacs.d/eln-cache= as each file is loaded for the first time. It keeps
+growing for a while and settles in the low hundreds of files and tens of
+megabytes. Both =elpa/= and =eln-cache/= persist and are untracked.
+
+Build the tree-sitter grammars once the daemon is up, then check it over:
+
+#+begin_src sh
+emacsclient -e '(native-comp-available-p)'          # t
+emacsclient -e '(length major-mode-remap-alist)'    # 7, once grammars are built
+#+end_src
+
+Attach with =emacsclient -t=. Nothing here needs a GUI frame, though
+emacs-plus builds =Emacs.app= anyway.
+
+*** Rolling back
+
+The core formula is still installed if it was only unlinked:
+
+#+begin_src sh
+launchctl bootout gui/$(id -u)/sh.brew.emacs-plus@30
+brew unlink emacs-plus@30 && brew link emacs
+brew services start emacs
+#+end_src
 
 ** Shell environment
 
