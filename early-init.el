@@ -9,6 +9,14 @@
 ;; init.el calls package-initialize itself, so without this the work is done twice.
 (setq package-enable-at-startup nil)
 
+;; Native compilation runs in the background the first time each package is
+;; loaded, and the warnings it emits come from third-party code rather than
+;; this config, so they are not actionable here.  Set before anything compiles,
+;; which is why it lives in early-init.el.  These variables are defined in
+;; comp.el and so do not exist on a build without native compilation; setq
+;; binds them harmlessly there and nothing reads them.
+(setq native-comp-async-report-warnings-errors 'silent)
+
 ;; Drop the UI elements before the first frame is drawn rather than
 ;; building them and tearing them down again.
 (push '(menu-bar-lines . 0) default-frame-alist)

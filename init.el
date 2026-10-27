@@ -60,6 +60,11 @@
 (setq use-package-always-ensure t
       use-package-verbose t)
 
+;; Natively compile a package when it is installed rather than the first time
+;; it is loaded, so the cost lands once during install instead of mid-session.
+;; package.el ignores this on a build without native compilation.
+(setq package-native-compile t)
+
 ;; Theme(s) & font(s) stuff
 
 (set-face-attribute 'default nil :height 140)
