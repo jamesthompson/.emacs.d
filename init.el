@@ -20,8 +20,8 @@
 ;; lisps/ holds packages that are not on any archive.  Loose .el files are
 ;; found directly; any subdirectory is added to the load path as well.  The
 ;; \w+ match skips "." and "..", which contain no word characters.
-(setq lisps-dir
-      (expand-file-name "lisps" user-emacs-directory))
+(defconst lisps-dir
+  (expand-file-name "lisps" user-emacs-directory))
 
 (add-to-list 'load-path lisps-dir)
 
@@ -84,8 +84,9 @@
 
 ;; The modifier settings only bite on a GUI (ns) build; this one is
 ;; terminal-only, so hyper in particular is unreachable there.
-(setq is-mac (equal system-type 'darwin)
-      mac-option-modifier 'super
+(defconst is-mac (eq system-type 'darwin))
+
+(setq mac-option-modifier 'super
       mac-command-modifier 'meta  ;; Command acts as meta
       ns-function-modifier 'hyper ;; fn acts as hyper
       delete-by-moving-to-trash t
@@ -162,17 +163,12 @@
       initial-scratch-message ";; Scratch"                     ;; Scratch header
       global-auto-revert-non-file-buffers t                    ;; Auto refresh dired too
       auto-revert-verbose nil                                  ;; ...without announcing each revert
-      ;; FIXME: expands to ~/.emacs.d//Users/<login>, which does not exist.
-      ;; It is added to load-path below and loads nothing.
-      user-settings-dir (concat user-emacs-directory
-                                "/Users/" user-login-name)
       vc-make-backup-files nil                                 ;; Version control already holds these
       select-enable-clipboard t                                ;; Share the kill ring with the system clipboard
       visible-bell t
       color-theme-is-global t
       truncate-partial-width-windows nil                       ;; Let split windows wrap like full-width ones
       shift-select-mode nil                                    ;; Do not use shift to mark things
-      delete-by-moving-to-trash t                              ;; Move files to trash when deleting
       echo-keystrokes 0.1                                      ;; Echo keystrokes fast
       column-number-mode t
       fill-column 80
@@ -187,8 +183,6 @@
       whitespace-line-column 80
       dired-dwim-target t                                      ;; Default copy/move target is the other dired window
       inhibit-compacting-font-caches t)                        ;; Keeps all-the-icons rendering fast (GUI only)
-
-(add-to-list 'load-path user-settings-dir)
 
 (defun current-buffer-matches-file-p ()
   "Return non-nil if the buffer text is identical to its file on disk.
@@ -225,8 +219,8 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 
 (random t) ;; Seed the random-number generator
 
-;; Answering just 'y' or 'n' is superior to typing three letters
-(defalias 'yes-or-no-p 'y-or-n-p)
+;; Answer y or n rather than typing yes or no in full.
+(setq use-short-answers t)
 
 ;; UTF-8 everywhere
 (set-terminal-coding-system 'utf-8)
@@ -235,7 +229,6 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 (prefer-coding-system 'utf-8)
 
 (global-hl-line-mode 1)                                  ;; Highlight the current line
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (global-auto-revert-mode 1)                              ;; Reload buffers when the file changes on disk
 (delete-selection-mode 1)                                ;; Typing replaces the active region
 (auto-compression-mode t)                                ;; Open .gz and friends transparently
@@ -245,6 +238,16 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 (set-default 'indicate-empty-lines t)                    ;; Mark lines past the end of the buffer
 (global-subword-mode 1)                                  ;; Treat camelCase humps as words
 (show-paren-mode 1)                                      ;; Highlight the paren matching the one at point
+
+;; Code buffers only.  Two trailing spaces end a Markdown line with a hard
+;; break, so stripping them everywhere rewrites prose on save.  Go is excluded
+;; because gopls already strips trailing whitespace through `lsp-format-buffer'
+;; below, and running both walks the buffer twice per save.
+(defun enable-trailing-whitespace-trim ()
+  (unless (derived-mode-p 'go-mode)
+    (add-hook 'before-save-hook #'delete-trailing-whitespace nil t)))
+
+(add-hook 'prog-mode-hook #'enable-trailing-whitespace-trim)
 
 ;; Buffer-local so a region in one buffer does not deactivate on switching,
 ;; and permanent-local so it survives a major mode change.
@@ -316,6 +319,10 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 ;; `indent-tabs-mode' as a hook function toggles, so it would turn tabs back
 ;; off wherever they are already on.
 (add-hook 'makefile-mode-hook (lambda () (indent-tabs-mode 1)))
+
+;; Declared, not loaded: the `let' below has to bind this dynamically, and
+;; comint.el is only required once `clear-shell' actually runs.
+(defvar comint-buffer-maximum-size)
 
 (defun clear-shell ()
   "Delete all output in the current comint buffer except the last prompt.
@@ -679,21 +686,19 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
 (use-package flx-ido
   :init (flx-ido-mode 1))
 
+;; C-n, C-p and the arrow keys step through matches rather than history, which
+;; is what a vertical list wants.  `ido-vertical-define-keys' defaults to nil,
+;; so without setting it the keys keep their flat-list meanings.
 (use-package ido-vertical-mode
-  :init (ido-vertical-mode))
+  :init
+  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+  (ido-vertical-mode))
 
 (use-package ido-at-point
   :init (ido-at-point-mode))
 
 (use-package ido-completing-read+
   :init (ido-ubiquitous-mode 1))
-
-;; FIXME: never added to `ido-setup-hook', so these bindings are not active.
-(defun sd/ido-define-keys ()
-  (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
-  (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
-  (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
-  (define-key ido-completion-map (kbd "<up>") 'ido-prev-match))
 
 ;; smex
 (use-package smex :defer t)
@@ -744,21 +749,10 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
              flycheck-next-error
              flycheck-previous-error)
   :config
-  (defalias 'show-error-at-point-soon
-    'flycheck-show-error-at-point)
-
   (defun adjust-flycheck-automatic-syntax-eagerness ()
     "Recheck quickly while errors are present, slowly once the buffer is clean."
     (setq flycheck-idle-change-delay
           (if flycheck-current-errors 0.5 30.0)))
-
-  ;; Replaces the upstream function to drop its deferred check, which held
-  ;; errors back until the next command instead of showing them on the timer.
-  ;; Revisit this after a flycheck upgrade: it is an internal function.
-  (defun flycheck-handle-idle-change ()
-    "Run a syntax check when the idle timer since the last change expires."
-    (flycheck-clear-idle-change-timer)
-    (flycheck-buffer-automatically 'idle-change))
 
   ;; Per buffer, because the delay above is adjusted per buffer.
   (make-variable-buffer-local 'flycheck-idle-change-delay)
