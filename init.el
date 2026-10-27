@@ -240,7 +240,7 @@ Reads each modified buffer's file, so keep it off any per-keystroke hook."
 ;; because gopls already strips trailing whitespace through `lsp-format-buffer'
 ;; below, and running both walks the buffer twice per save.
 (defun enable-trailing-whitespace-trim ()
-  (unless (derived-mode-p 'go-mode)
+  (unless (derived-mode-p 'go-mode 'go-ts-mode)
     (add-hook 'before-save-hook #'delete-trailing-whitespace nil t)))
 
 (add-hook 'prog-mode-hook #'enable-trailing-whitespace-trim)
@@ -771,6 +771,54 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
                         `(lambda () (interactive) (company-complete-number ,x))))
           (number-sequence 0 9))))
 
+;; Tree-sitter
+;;
+;; This build has tree-sitter compiled in, but a grammar is a shared library
+;; that has to be built on the machine, and none ship with Emacs.  Build the
+;; ones listed here with M-x treesit-install-grammars, which needs git and a C
+;; compiler and clones each repo below.  They land in ~/.emacs.d/tree-sitter,
+;; which is gitignored because the objects are machine specific.
+;;
+;; `treesit-available-p' is a built-in, so this costs nothing on a build
+;; without tree-sitter: the whole block is skipped.
+(when (and (fboundp 'treesit-available-p) (treesit-available-p))
+  (require 'treesit)
+
+  (setq treesit-language-source-alist
+        '((go         "https://github.com/tree-sitter/tree-sitter-go")
+          (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
+          (json       "https://github.com/tree-sitter/tree-sitter-json")
+          (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
+          (rust       "https://github.com/tree-sitter/tree-sitter-rust")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+                      nil "typescript/src")
+          (tsx        "https://github.com/tree-sitter/tree-sitter-typescript"
+                      nil "tsx/src")
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
+
+  (defun treesit-install-grammars (&optional force)
+    "Build every grammar in `treesit-language-source-alist' that is missing.
+With a prefix argument FORCE, rebuild the ones already present too."
+    (interactive "P")
+    (dolist (entry treesit-language-source-alist)
+      (let ((lang (car entry)))
+        (if (and (not force) (treesit-language-available-p lang))
+            (message "tree-sitter: %s already built" lang)
+          (treesit-install-language-grammar lang)))))
+
+  ;; Remap only where the grammar is actually built.  A tree-sitter mode with
+  ;; no grammar cannot start, so without this guard a .go file on a machine
+  ;; that has not run the install would fail to open rather than fall back.
+  (dolist (entry '((go-mode         go-ts-mode         go)
+                   (json-mode       json-ts-mode       json)
+                   (js-json-mode    json-ts-mode       json)
+                   (yaml-mode       yaml-ts-mode       yaml)
+                   (rust-mode       rust-ts-mode       rust)
+                   (typescript-mode typescript-ts-mode typescript)
+                   (dockerfile-mode dockerfile-ts-mode dockerfile)))
+    (when (treesit-language-available-p (nth 2 entry))
+      (add-to-list 'major-mode-remap-alist (cons (nth 0 entry) (nth 1 entry))))))
+
 ;; Haskell
 
 (use-package haskell-mode
@@ -824,19 +872,25 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
 
 ;; Completion comes from lsp-mode through company-capf, so nothing here should
 ;; set company-backends: replacing that list locally would cut gopls out.
+(defun go-setup-indentation ()
+  "Indent Go with tabs, which is what gofmt emits."
+  (setq indent-tabs-mode t
+        tab-width 2))
+
+;; go-ts-mode is a separate mode, not derived from go-mode, so every Go hook
+;; has to name both.  Which one a .go file actually gets is decided by
+;; `major-mode-remap-alist' above, from whether the grammar is built.
 (use-package go-mode
   :mode "\\.go\\'"
   :init
-  (add-hook 'go-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode t)   ;; gofmt wants tabs
-              (setq tab-width 2))))
+  (add-hook 'go-mode-hook #'go-setup-indentation)
+  (add-hook 'go-ts-mode-hook #'go-setup-indentation))
 
 (use-package lsp-mode
   :pin melpa-stable
   :ensure t
   :commands (lsp lsp-deferred)
-  :hook (go-mode . lsp-deferred)
+  :hook ((go-mode go-ts-mode) . lsp-deferred)
   :init
   ;; gopls sends large JSON payloads, and the 64KB default splits each one
   ;; across many more reads.  lsp-log-io stays off; it is costly.
@@ -854,6 +908,7 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+(add-hook 'go-ts-mode-hook #'lsp-go-install-save-hooks)
 
 ;; Sideline and peek overlays for lsp-mode, enabled per buffer.
 (use-package lsp-ui
@@ -864,7 +919,7 @@ Routed through ido by `ido-ubiquitous-mode', set up further down."
 (use-package yasnippet
   :ensure t
   :commands yas-minor-mode
-  :hook (go-mode . yas-minor-mode))
+  :hook ((go-mode go-ts-mode) . yas-minor-mode))
 
 ;; Typescript / TSX - Frontend Stuff
 
