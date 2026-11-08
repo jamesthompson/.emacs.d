@@ -891,8 +891,9 @@ With a prefix argument FORCE, rebuild the ones already present too."
   (add-hook 'go-mode-hook #'go-setup-indentation)
   (add-hook 'go-ts-mode-hook #'go-setup-indentation))
 
+;; Tracks MELPA rather than melpa-stable: lean4-mode needs an lsp-mode newer
+;; than the 9.0.0 release (it uses the :action-filter client keyword).
 (use-package lsp-mode
-  :pin melpa-stable
   :ensure t
   :commands (lsp lsp-deferred)
   :hook ((go-mode go-ts-mode) . lsp-deferred)
@@ -943,6 +944,19 @@ With a prefix argument FORCE, rebuild the ones already present too."
          ("\\.dats\\'" . ats-mode)
          ("\\.sats\\'" . ats-mode)
          ("\\.pats\\'" . ats-mode)))
+
+;; Lean 4
+
+;; lean4-mode is on no archive, so it comes from its git repository through
+;; the :vc keyword (Emacs 30+).  It registers the lsp-mode client for
+;; `lake serve' and creates the workspace, but does not start lsp itself, so
+;; that is hooked here.  C-c C-i toggles the goal buffer, the infoview.
+;; Needs elan on PATH (~/.elan/bin).
+(use-package lean4-mode
+  :commands lean4-mode
+  :vc (:url "https://github.com/leanprover-community/lean4-mode.git"
+       :rev :last-release)
+  :hook (lean4-mode . lsp-deferred))
 
 ;; Build Tools
 
