@@ -896,7 +896,7 @@ With a prefix argument FORCE, rebuild the ones already present too."
 (use-package lsp-mode
   :ensure t
   :commands (lsp lsp-deferred)
-  :hook ((go-mode go-ts-mode) . lsp-deferred)
+  :hook ((go-mode go-ts-mode rust-mode rust-ts-mode) . lsp-deferred)
   :init
   ;; gopls sends large JSON payloads, and the 64KB default splits each one
   ;; across many more reads.  lsp-log-io stays off; it is costly.

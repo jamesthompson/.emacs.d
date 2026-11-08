@@ -201,16 +201,21 @@ rather than failing to open the file.
 | graphql    | graphql-mode       | .graphql and .graphqls             |
 | haskell    | haskell-mode       |                                    |
 | json       | json-ts-mode       |                                    |
-| markdown   | markdown-mode      | pulled in as a dependency          |
+| lean 4     | lean4-mode         | lake serve, =C-c C-i= infoview     |
+| markdown  | markdown-mode      | pulled in as a dependency          |
 | nix        | nix-mode           |                                    |
 | protobuf   | protobuf-mode      | "pb style" registered, not default |
-| rust       | rust-ts-mode       | no LSP hook, start with =M-x lsp=  |
+| rust       | rust-ts-mode       | rust-analyzer, started on open     |
 | sql        | sql-mode           | sqlformat via pgformatter          |
 | terraform  | terraform-mode     |                                    |
 | typescript | typescript-ts-mode | =.tsx= uses tsx-ts-mode            |
 | yaml       | yaml-ts-mode       |                                    |
 
-Go is the only language wired to LSP automatically.
+Go, Rust and Lean start LSP automatically. Rust needs the =rust-analyzer=
+component (=rustup component add rust-analyzer=), because the binary in
+=~/.cargo/bin= is only a proxy. Lean needs elan on =PATH=, and lean4-mode is
+installed from its git repository since it is on no archive. lsp-mode follows
+MELPA rather than melpa-stable, because lean4-mode needs a newer one.
 
 ** Keys worth knowing
 
